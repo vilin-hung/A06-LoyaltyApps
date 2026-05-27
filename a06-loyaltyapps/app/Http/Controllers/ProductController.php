@@ -7,72 +7,73 @@ use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {   
-    public function __construct()
-    {
-        // Semua method kecuali index dan show butuh auth
-        $this->middleware('auth')->except(['index', 'show']);
-        
-        // Method create, store, edit, update, destroy butuh admin 
-        $this->middleware('admin')->only(['create', 'store', 'edit', 'update', 'destroy']);
-    }
     /**
-     * Display a listing of the resource.
+     * Menampilkan semua data product
      */
     public function index()
     {
+        // Mengambil seluruh data product dari database
         $products = Product::all();
+        // Mengirim data ke view index product
         return view('products.index', compact('products'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Menampilkan form tambah product
      */
     public function create()
     {
+        // Menampilkan halaman form untuk menambah product baru
         return view('products.create');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Menyimpan data product baru ke database
      */
     public function store(Request $request)
     {
+        // Validassi input dari user sebelum masuk ke database
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
             'price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'category' => 'nullable|string|max:255',
+            'category' => 'required|string|max:255',
         ]);
 
+        // Menyimpan data product yang sudah divalidasi
         Product::create($validated);
 
+        // Redirect ke halaman daftar product dengan pesan berhasil
         return redirect()
             ->route('products.index')
             ->with('success', 'Product berhasil ditambahkan!');
     }
 
     /**
-     * Display the specified resource.
+     * Menampilkan detail product beserta relasi review
      */
     public function show(Product $product)
     {
+        // Menampilkan detail product
         return view('products.show', compact('product'));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Menampilkan form edit product
      */
     public function edit(Product $product)
     {
+        // Menampilkan form edit dengan data product yang dipilih
         return view('products.edit', compact('product'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Mengupdate data product
      */
     public function update(Request $request, Product $product)
     {
+        // Validasi input sebelum update ke database
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -81,6 +82,7 @@ class ProductController extends Controller
             'category' => 'nullable|string|max:255',
         ]);
 
+        // Update data product
         $product->update($validated);
         return redirect()
             ->route('products.index')
@@ -88,7 +90,7 @@ class ProductController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Menghapus data product dari database
      */
     public function destroy(Product $product)
     {
