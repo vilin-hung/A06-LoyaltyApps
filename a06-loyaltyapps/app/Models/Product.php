@@ -13,4 +13,9 @@ class Product extends Model
     'stock',
     'category'
     ];
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
 }
