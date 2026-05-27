@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use App\Models\Product;
+use App\Services\TransactionService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,7 +23,8 @@ class TransactionController extends Controller
      */
     public function create()
     {
-        //
+        $products = Product::all();
+        return view('transactions.order', compact('products'));
     }
 
     /**
@@ -29,15 +32,16 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi agar total_amount wajib diisi
-        $request->validate([
-            'total_amount' => 'required|numeric|min:1'
+         $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
         ]);
-
-        // Mengambil data user yang sedang login
+        
         $user = Auth::user();
-        // Total belanja awal user sebelum diskon
-        $subtotal = $request->total_amount;
+        
+        $product = Product::findOrFail($request->product_id);
+        $subtotal = $product->price * $request->quantity;
+
         // Mengambil persentase diskon dari tier user (0, 5, atau 10)
         $discountPercentage = $user->membership->discount_percentage;
         $discountNominal = $subtotal * ($discountPercentage / 100);
@@ -67,7 +71,7 @@ class TransactionController extends Controller
         }
 
         $user->save();
-        return redirect()->back()->with('success', 'Transaksi berhasil! Anda mendapatkan ' . $earnedPoints . ' poin.');
+        return redirect()->route('transactions.success')->with('earnedPoints', $earnedPoints)->with('discountNominal', $discountNominal);
     }
 
     /**
@@ -100,5 +104,22 @@ class TransactionController extends Controller
     public function destroy(Transaction $transaction)
     {
         //
+    }
+
+    // Menampilkan riwayat transaksi user
+    public function history()
+    {
+        $transactions = Transaction::where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('transactions.history', compact('transactions'));
+    }
+  
+    public function success()
+    {
+        if (!session()->has('earnedPoints')) {
+            return redirect()->route('transactions.history');
+        }
+        return view('transactions.success');
     }
 }
