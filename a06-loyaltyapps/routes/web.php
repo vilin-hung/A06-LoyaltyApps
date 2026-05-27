@@ -9,6 +9,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\RedeemController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
+use App\Http\Middleware\AdminMiddleware;
 
 // Home page redirects
 Route::get('/', function () {
@@ -22,7 +23,6 @@ Route::get('/home', function () {
 /*
     Guest Routes (Unauthenticated users only)
 */
-
 Route::middleware('guest')->group(function () {
     // Authentication
     Route::get('login', [AuthController::class, 'showLoginForm'])->name('show.login');
@@ -33,9 +33,8 @@ Route::middleware('guest')->group(function () {
 });
 
 /*
-    Authenticated Routes  (Login dulu baru bisa akses)
+    Authenticated Routes (Login dulu baru bisa akses)
 */
-
 Route::middleware('auth')->group(function () {
     
     // Authentication
@@ -49,5 +48,17 @@ Route::middleware('auth')->group(function () {
     
     // Vouchers Management
     Route::resource('vouchers', VoucherController::class);
+    
+});
+
+/*
+    Admin Routes (Wajib login dan wajib admin)
+*/
+Route::middleware(['auth', AdminMiddleware::class])->group(function () {
+    
+    // Halaman Dashboard Admin
+    Route::get('/admin/dashboard', function () {
+        return view('admin.dashboard');
+    })->name('admin.dashboard');
     
 });
