@@ -1,6 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProductController;
+
+//Route::middleware(['auth', 'admin'])->group(function () {
+    Route::resource('products', ProductController::class);
+//});
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\RedeemController;
