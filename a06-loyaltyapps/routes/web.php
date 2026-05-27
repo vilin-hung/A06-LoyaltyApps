@@ -8,7 +8,6 @@ use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\RedeemController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\VoucherController;
 
 Route::resource('products', ProductController::class);
 Route::resource('reviews', ReviewController::class);

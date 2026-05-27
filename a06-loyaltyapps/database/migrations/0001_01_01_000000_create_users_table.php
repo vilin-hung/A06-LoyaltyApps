@@ -11,12 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
+        //Tabel utama user: nama, email, password, saldo, point, role
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->decimal('saldo', 12, 2)->default(0); 
+            $table->unsignedInteger('points')->default(0); 
+            $table->enum('role', ['user', 'admin'])->default('user');
             $table->rememberToken();
             $table->timestamps();
         });
