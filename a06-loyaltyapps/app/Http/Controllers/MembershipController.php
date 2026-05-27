@@ -12,7 +12,8 @@ class MembershipController extends Controller
      */
     public function index()
     {
-        //
+        $memberships = Membership::all();
+        return view('memberships.index', compact('memberships'));
     }
 
     /**
@@ -28,7 +29,16 @@ class MembershipController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'level' => 'required|string|max:255',
+            'min_transaction' => 'required|integer|min:0',
+            'point_multiplier' => 'required|integer|min:1',
+            'discount_percentage' => 'required|integer|min:0|max:100',
+            'description' => 'nullable|string',
+        ]);
+
+        Membership::create($validated);
+        return redirect()->route('memberships.index')->with('success', 'Tier Membership berhasil ditambahkan!');
     }
 
     /**
@@ -36,7 +46,7 @@ class MembershipController extends Controller
      */
     public function show(Membership $membership)
     {
-        //
+        return view('memberships.show', compact('membership'));
     }
 
     /**
@@ -44,7 +54,7 @@ class MembershipController extends Controller
      */
     public function edit(Membership $membership)
     {
-        //
+        return view('memberships.edit', compact('membership'));
     }
 
     /**
@@ -52,7 +62,16 @@ class MembershipController extends Controller
      */
     public function update(Request $request, Membership $membership)
     {
-        //
+        $validated = $request->validate([
+            'level' => 'required|string|max:255',
+            'min_transaction' => 'required|integer|min:0',
+            'point_multiplier' => 'required|integer|min:1',
+            'discount_percentage' => 'required|integer|min:0|max:100',
+            'description' => 'nullable|string',
+        ]);
+
+        $membership->update($validated);
+        return redirect()->route('memberships.index')->with('success', 'Tier Membership berhasil diperbarui!');
     }
 
     /**
@@ -60,6 +79,7 @@ class MembershipController extends Controller
      */
     public function destroy(Membership $membership)
     {
-        //
+        $membership->delete();
+        return redirect()->route('memberships.index')->with('success', 'Tier Membership berhasil dihapus!');
     }
 }

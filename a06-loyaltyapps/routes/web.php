@@ -16,3 +16,5 @@ Route::middleware('auth')->group(function () {
     Route::post('/redeem', [RedeemController::class, 'store'])->name('redeem.store');
     Route::get('/redeem/history', [RedeemController::class, 'history'])->name('redeem.history');
 });
+Route::resource('memberships', MembershipController::class);
+Route::resource('transactions', TransactionController::class);

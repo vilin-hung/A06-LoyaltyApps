@@ -29,7 +29,7 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        // Validasi agar total_amount wajib diisi dan harus berupa angka
+        // Validasi agar total_amount wajib diisi
         $request->validate([
             'total_amount' => 'required|numeric|min:1'
         ]);
@@ -39,10 +39,8 @@ class TransactionController extends Controller
         // Total belanja awal user sebelum diskon
         $subtotal = $request->total_amount;
         // Mengambil persentase diskon dari tier user (0, 5, atau 10)
-        $discountPercentage = $user->membership->discount_percentage; 
-        // Menghitung potongan harga
+        $discountPercentage = $user->membership->discount_percentage;
         $discountNominal = $subtotal * ($discountPercentage / 100);
-        // Menhitung total belanja akhir user yang harus dibayar
         $finalAmount = $subtotal - $discountNominal;    
 
         $transaction = new Transaction();
@@ -52,11 +50,7 @@ class TransactionController extends Controller
         
         // Mengambil nilai pengali (multiplier) berdasarkan tier user saat ini
         $multiplier = $user->membership->point_multiplier; 
-
-        // Hitung poin dasar (Kelipatan Rp 30.000 dibulatkan ke bawah)
         $basePoints = floor($finalAmount / 30000);
-
-        // Kalikan dengan point_multiplier
         $earnedPoints = $basePoints * $multiplier;
 
         // Tambahkan poin dan total belanjaan ke tabel user
@@ -72,10 +66,7 @@ class TransactionController extends Controller
             $user->membership_id = 1; // Tier membership tetap di Silver
         }
 
-        // Simpan perubahan data user ke database
         $user->save();
-
-        // 5. Kembalikan user ke halaman sebelumnya dengan pesan sukses
         return redirect()->back()->with('success', 'Transaksi berhasil! Anda mendapatkan ' . $earnedPoints . ' poin.');
     }
 
