@@ -6,12 +6,12 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\RedeemController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\VoucherController;
 
 Route::resource('products', ProductController::class);
 Route::resource('reviews', ReviewController::class);
 Route::resource('vouchers', VoucherController::class);
-Route::middleware('auth')->group(function () {
-    Route::get('/redeem', [RedeemController::class, 'create'])->name('redeem.create');
-    Route::post('/redeem', [RedeemController::class, 'store'])->name('redeem.store');
-    Route::get('/redeem/history', [RedeemController::class, 'history'])->name('redeem.history');
-});
+// Route::middleware('auth')->group(function () {
+// });
