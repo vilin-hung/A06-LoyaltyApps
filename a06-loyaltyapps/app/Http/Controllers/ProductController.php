@@ -6,7 +6,15 @@ use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
-{
+{   
+    public function __construct()
+    {
+        // Semua method kecuali index dan show butuh auth
+        $this->middleware('auth')->except(['index', 'show']);
+        
+        // Method create, store, edit, update, destroy butuh admin 
+        $this->middleware('admin')->only(['create', 'store', 'edit', 'update', 'destroy']);
+    }
     /**
      * Display a listing of the resource.
      */
