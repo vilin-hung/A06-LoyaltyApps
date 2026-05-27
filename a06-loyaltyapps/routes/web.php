@@ -16,10 +16,6 @@ Route::get('/', function () {
     return view('home');
 })->middleware('auth')->name('home');
 
-Route::get('/home', function () {
-    return view('home');
-})->middleware('auth');
-
 /*
     Guest Routes (Unauthenticated users only)
 */
@@ -54,8 +50,7 @@ Route::middleware('auth')->group(function () {
 /*
     Admin Routes (Wajib login dan wajib admin)
 */
-Route::middleware(['auth', AdminMiddleware::class])->group(function () {
-    
+Route::middleware(['auth', 'admin'])->group(function () {
     // Halaman Dashboard Admin
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');

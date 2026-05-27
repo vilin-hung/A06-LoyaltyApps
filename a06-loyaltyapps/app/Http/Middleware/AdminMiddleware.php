@@ -13,11 +13,15 @@ class AdminMiddleware
      *
      * @param  Closure(Request): (Response)  $next
      */
+
+    //Cek apakah sudah login dan admin
     public function handle(Request $request, Closure $next): Response
     {
         if (auth()->check() && auth()->user()->role === 'admin') {
             return $next($request);
         }    
+
+        // Bukan admin, error 403
         abort(403, 'Unauthorized. Admin only.');
     }
 }
