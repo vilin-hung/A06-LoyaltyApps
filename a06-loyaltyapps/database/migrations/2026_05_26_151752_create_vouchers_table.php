@@ -12,10 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('vouchers', function (Blueprint $table) {
+            $table->id();
             $table->string('name');
             $table->string('code')->unique();
             $table->text('description')->nullable();
-            $table->integer('points_required')->default(0); // Poin yang dibutuhkan
+            $table->integer('points_required')->default(0); // Poin yang dibutuhkan untuk bisa tukar voucher
             $table->enum('discount_type', ['percentage', 'fixed']);
             $table->integer('discount_value');
             $table->integer('quota')->default(0);
