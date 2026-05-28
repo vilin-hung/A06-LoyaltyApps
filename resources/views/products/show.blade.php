@@ -7,6 +7,11 @@
 
 <!-- Menampilkan detail informasi product -->
 <h1>{{ $product->name }}</h1>
+<p>
+    <a href="{{ route('products.index') }}" class="btn">
+        Kembali
+    </a>
+</p>
 <p>Price: {{ $product->price }}</p>
 <p>Description: {{ $product->description }}</p>
 <p>Category: {{ $product->category }}</p>

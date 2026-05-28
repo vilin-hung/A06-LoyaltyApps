@@ -41,7 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/saldo', [UserController::class, 'saldo'])->name('saldo');
 
     // Products
-    Route::resource('products', ProductController::class)->only(['index', 'show']);
+    Route::resource('products', ProductController::class);
 
     // Reviews 
     Route::resource('reviews', ReviewController::class);
@@ -73,7 +73,4 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
-    
-    // Products (Full CRUD)
-    Route::resource('products', ProductController::class)->except(['index', 'show']);
 });
