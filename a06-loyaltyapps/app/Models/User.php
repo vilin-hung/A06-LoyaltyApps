@@ -22,6 +22,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'membership_id',
+        'current_points',
+        'total_spent',
     ];
 
     /**
@@ -45,5 +48,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function membership()
+    {
+        return $this->belongsTo(Membership::class, 'membership_id', 'id');
     }
 }

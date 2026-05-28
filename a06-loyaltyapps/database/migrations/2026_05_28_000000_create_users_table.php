@@ -17,6 +17,9 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->foreignId('membership_id')->default(1)->constrained('memberships');
+            $table->integer('current_points')->default(0);
+            $table->integer('total_spent')->default(0);
             $table->rememberToken();
             $table->timestamps();
         });
