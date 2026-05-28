@@ -26,7 +26,7 @@ class RedeemController extends Controller
     {
         $vouchers = Voucher::all();
 
-        return view('redeem.create', compact('vouchers'));
+        return view('redeem.redeem-form', compact('vouchers'));
     }
 
     /**
@@ -104,6 +104,6 @@ class RedeemController extends Controller
     {
         $redeems = Redeem::where('user_id', Auth::id())->get();
 
-        return view('redeem.history', compact('redeems'));
+        return view('redeem.redeem-history', compact('redeems'));
     }
 }
