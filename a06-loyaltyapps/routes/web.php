@@ -33,6 +33,13 @@ Route::middleware('auth')->group(function () {
         return view('home');
     })->name('home');
 
+    // User
+    Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+    Route::get('/change-password', [UserController::class, 'showChangePassword'])->name('change-password');
+    Route::post('/change-password', [UserController::class, 'changePassword'])->name('change-password.submit');
+    Route::get('/points', [UserController::class, 'points'])->name('points');
+    Route::get('/saldo', [UserController::class, 'saldo'])->name('saldo');
+
     // Products
     Route::resource('products', ProductController::class)->only(['index', 'show']);
 
