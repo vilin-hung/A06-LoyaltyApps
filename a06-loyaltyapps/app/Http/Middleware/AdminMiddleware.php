@@ -14,6 +14,8 @@ class AdminMiddleware
      *
      * @param  Closure(Request): (Response)  $next
      */
+
+    //Cek apakah sudah login dan admin
     public function handle(Request $request, Closure $next): Response
     {
         // Cek apakah user sudah login dan memiliki role admin

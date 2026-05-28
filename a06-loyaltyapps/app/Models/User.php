@@ -22,8 +22,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'saldo',
+        'points',
+        'role',
         'membership_id',
-        'current_points',
         'total_spent',
     ];
 
@@ -53,5 +55,10 @@ class User extends Authenticatable
     public function membership()
     {
         return $this->belongsTo(Membership::class, 'membership_id', 'id');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }
