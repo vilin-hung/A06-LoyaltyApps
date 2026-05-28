@@ -17,9 +17,9 @@ class AdminMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         // Cek apakah user sudah login dan memiliki role admin
-        if (!auth()->check() || auth()->user()->role !== 'admin') {
-            abort(403, 'Akses ditolak. Hanya admin.');
-        }
-        return $next($request);
+        if (auth()->check() && auth()->user()->role === 'admin') {
+            return $next($request);
+        }    
+        abort(403, 'Akses ditolak. Hanya admin.');
     }
 }

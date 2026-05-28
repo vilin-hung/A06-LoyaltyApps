@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transaction;
+use App\Models\Product;
+use App\Services\TransactionService;
 use Illuminate\Http\Request;
 
 class TransactionController extends Controller
@@ -20,7 +22,8 @@ class TransactionController extends Controller
      */
     public function create()
     {
-        //
+        $products = Product::all();
+        return view('transactions.order', compact('products'));
     }
 
     /**
@@ -28,7 +31,21 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+        ]);
+
+        try {
+            $items = [
+                ['product_id' => $request->product_id, 'quantity' => $request->quantity]
+            ];
+            $result = TransactionService::processOrder(auth()->id(), $items);
+            return redirect()->route('transactions.history')
+                ->with('success', "Order berhasil! Poin +{$result['points']}");
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }    
     }
 
     /**
@@ -62,4 +79,13 @@ class TransactionController extends Controller
     {
         //
     }
+
+    // Menampilkan riwayat transaksi user
+    public function history()
+    {
+        $transactions = Transaction::where('user_id', auth()->id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+        return view('transactions.history', compact('transactions'));
+    }    
 }
