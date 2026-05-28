@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Redeem;
-use App\Http\Controllers\Controller;
+use App\Models\Voucher;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class RedeemController extends Controller
 {
@@ -13,7 +14,9 @@ class RedeemController extends Controller
      */
     public function index()
     {
-        //
+        $redeems = Redeem::all();
+
+        return view('redeem.index', compact('redeems'));
     }
 
     /**
@@ -21,7 +24,9 @@ class RedeemController extends Controller
      */
     public function create()
     {
-        //
+        $vouchers = Voucher::all();
+
+        return view('redeem.create', compact('vouchers'));
     }
 
     /**
@@ -29,7 +34,19 @@ class RedeemController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'voucher_id' => 'required',
+            'points_spent' => 'required|integer',
+        ]);
+
+        Redeem::create([
+            'user_id' => Auth::id(),
+            'voucher_id' => $request->voucher_id,
+            'points_spent' => $request->points_spent,
+        ]);
+
+        return redirect()->route('redeem.history')
+            ->with('success', 'Redeem berhasil');
     }
 
     /**
@@ -37,7 +54,7 @@ class RedeemController extends Controller
      */
     public function show(Redeem $redeem)
     {
-        //
+        return view('redeem.show', compact('redeem'));
     }
 
     /**
@@ -45,7 +62,9 @@ class RedeemController extends Controller
      */
     public function edit(Redeem $redeem)
     {
-        //
+        $vouchers = Voucher::all();
+
+        return view('redeem.edit', compact('redeem', 'vouchers'));
     }
 
     /**
@@ -53,7 +72,18 @@ class RedeemController extends Controller
      */
     public function update(Request $request, Redeem $redeem)
     {
-        //
+        $request->validate([
+            'voucher_id' => 'required',
+            'points_spent' => 'required|integer',
+        ]);
+
+        $redeem->update([
+            'voucher_id' => $request->voucher_id,
+            'points_spent' => $request->points_spent,
+        ]);
+
+        return redirect()->route('redeem.index')
+            ->with('success', 'Redeem updated successfully');
     }
 
     /**
@@ -61,6 +91,19 @@ class RedeemController extends Controller
      */
     public function destroy(Redeem $redeem)
     {
-        //
+        $redeem->delete();
+
+        return redirect()->route('redeem.index')
+            ->with('success', 'Redeem deleted successfully');
+    }
+
+    /**
+     * Display redeem history.
+     */
+    public function history()
+    {
+        $redeems = Redeem::where('user_id', Auth::id())->get();
+
+        return view('redeem.history', compact('redeems'));
     }
 }
