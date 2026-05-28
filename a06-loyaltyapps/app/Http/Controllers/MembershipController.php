@@ -21,7 +21,11 @@ class MembershipController extends Controller
      */
     public function create()
     {
-        //
+        if (!auth()->user()->is_admin) {
+            abort(403);
+        }
+
+        return view('memberships.create');
     }
 
     /**
@@ -29,6 +33,10 @@ class MembershipController extends Controller
      */
     public function store(Request $request)
     {
+        if (!auth()->user()->is_admin) {
+            abort(403);
+        }
+
         $validated = $request->validate([
             'level' => 'required|string|max:255',
             'min_transaction' => 'required|integer|min:0',
@@ -54,6 +62,10 @@ class MembershipController extends Controller
      */
     public function edit(Membership $membership)
     {
+        if (!auth()->user()->is_admin) {
+            abort(403);
+        }
+
         return view('memberships.edit', compact('membership'));
     }
 
@@ -62,6 +74,10 @@ class MembershipController extends Controller
      */
     public function update(Request $request, Membership $membership)
     {
+        if (!auth()->user()->is_admin) {
+            abort(403);
+        }
+
         $validated = $request->validate([
             'level' => 'required|string|max:255',
             'min_transaction' => 'required|integer|min:0',
@@ -79,6 +95,10 @@ class MembershipController extends Controller
      */
     public function destroy(Membership $membership)
     {
+        if (!auth()->user()->is_admin) {
+            abort(403);
+        }
+        
         $membership->delete();
         return redirect()->route('memberships.index')->with('success', 'Tier Membership berhasil dihapus!');
     }
