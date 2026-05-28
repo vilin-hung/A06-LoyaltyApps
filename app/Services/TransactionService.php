@@ -30,8 +30,8 @@ class TransactionService
     }
 
     // Cek saldo user
-    if ($user->balance < $total) {
-      throw new \Exception("Saldo tidak cukup");
+    if ($user->saldo< $total) {
+      return back()->with('error', 'Saldo tidak cukup');
     }
 
     // Hitung poin berdasarkan tier
@@ -48,7 +48,7 @@ class TransactionService
       }
 
       // Update user
-      $user->balance -= $total;
+      $user->saldo -= $total;
       $user->total_spent += $total;
       $user->points += $pointsEarned;
       $user->save();
