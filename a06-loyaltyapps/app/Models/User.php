@@ -25,6 +25,8 @@ class User extends Authenticatable
         'saldo',
         'points',
         'role',
+        'membership_id',
+        'total_spent',
     ];
 
     /**
@@ -48,5 +50,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function membership()
+    {
+        return $this->belongsTo(Membership::class, 'membership_id', 'id');
+    }
+
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
     }
 }

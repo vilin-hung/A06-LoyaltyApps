@@ -10,6 +10,7 @@ class AdminMiddleware
 {
     /**
      * Handle an incoming request.
+     * Middleware ini digunakan untuk membatasi akses hanya untuk user dengan role admin.
      *
      * @param  Closure(Request): (Response)  $next
      */
@@ -17,11 +18,10 @@ class AdminMiddleware
     //Cek apakah sudah login dan admin
     public function handle(Request $request, Closure $next): Response
     {
+        // Cek apakah user sudah login dan memiliki role admin
         if (auth()->check() && auth()->user()->role === 'admin') {
             return $next($request);
         }    
-
-        // Bukan admin, error 403
-        abort(403, 'Unauthorized. Admin only.');
+        abort(403, 'Akses ditolak. Hanya admin.');
     }
 }

@@ -9,34 +9,41 @@ use Illuminate\Support\Facades\Auth;
 class ReviewController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Menampilkan daftar review 
      */
     public function index()
     {
+        // Ambil semua review beserta relasi user dan product
         $reviews = Review::with(['user', 'product'])->get();
+        // Kirim data ke view 
         return view('reviews.index', compact('reviews'));    
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Menampilkan form untuk menambahkan review baru pada product tertentu
      */
     public function create()
     {
-        $product = Product::find($request->product_id);
+        // Ambil data product berdasarkan product_id dari request URL
+        $product = Product::findOrFail(request('product_id'));
+        // Tampilkan form create review untuk product tersebut
         return view('reviews.create', compact('product'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Menyimpan review baru ke database
      */
     public function store(Request $request)
     {
+        // Simpan review baru berdasarkan user yang sedang login
         Review::create([
-            'user_id' => Auth()::id(),
+            'user_id' => auth()->id(),
             'product_id' => $request->product_id,
             'rating' => $request->rating,
             'comment' => $request->comment,
         ]);
+
+        // redirect ke halaman detail product
         return redirect()->route('products.show', $request->product_id);
     }
 
@@ -49,24 +56,28 @@ class ReviewController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Menampilkan form edit review
      */
     public function edit(Review $review)
     {
+        // Cek apakah user yang login adalah pemilik review
         if (Auth::id() != $review->user_id) {
         abort(403);
         }
+
         return view('reviews.edit', compact('review'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Mengupdate data review
      */
     public function update(Request $request, Review $review)
     {
+        // Validasi kepemilikan review
         if (Auth::id() != $review->user_id) {
             abort(403);
         }
+        // Update isi review
         $review->update([
             'rating' => $request->rating,
             'comment' => $request->comment,
@@ -75,13 +86,15 @@ class ReviewController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Menghapus review dari database (Admin only)
      */
     public function destroy(Review $review)
     {
+        // Admin saja yang bisa menghapus review
         if (Auth::user()->role != 'admin') {
             abort(403);
         }
+        // Menghapus review
         $review->delete();
         return redirect()->back();
     }

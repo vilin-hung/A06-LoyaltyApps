@@ -6,6 +6,7 @@ use App\Models\Transaction;
 use App\Models\Product;
 use App\Services\TransactionService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
@@ -31,21 +32,46 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+         $request->validate([
             'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
         ]);
+        
+        $user = Auth::user();
+        
+        $product = Product::findOrFail($request->product_id);
+        $subtotal = $product->price * $request->quantity;
 
-        try {
-            $items = [
-                ['product_id' => $request->product_id, 'quantity' => $request->quantity]
-            ];
-            $result = TransactionService::processOrder(auth()->id(), $items);
-            return redirect()->route('transactions.history')
-                ->with('success', "Order berhasil! Poin +{$result['points']}");
-        } catch (\Exception $e) {
-            return back()->with('error', $e->getMessage());
-        }    
+        // Mengambil persentase diskon dari tier user (0, 5, atau 10)
+        $discountPercentage = $user->membership->discount_percentage;
+        $discountNominal = $subtotal * ($discountPercentage / 100);
+        $finalAmount = $subtotal - $discountNominal;    
+
+        $transaction = new Transaction();
+        $transaction->user_id = Auth::id(); // Menyimpan ID user yang login
+        $transaction->total_amount = $finalAmount;
+        $transaction->save();
+        
+        // Mengambil nilai pengali (multiplier) berdasarkan tier user saat ini
+        $multiplier = $user->membership->point_multiplier; 
+        $basePoints = floor($finalAmount / 30000);
+        $earnedPoints = $basePoints * $multiplier;
+
+        // Tambahkan poin dan total belanjaan ke tabel user
+        $user->current_points += $earnedPoints;
+        $user->total_spent += $finalAmount; 
+
+        // Mengecek apakah user dapat naik tier setelah transaksi
+        if ($user->total_spent >= 800000) {
+            $user->membership_id = 3; // Tier membership diupdate ke Platinum
+        } elseif ($user->total_spent >= 300000) {
+            $user->membership_id = 2; // Tier membership diupdate ke Gold
+        } else {
+            $user->membership_id = 1; // Tier membership tetap di Silver
+        }
+
+        $user->save();
+        return redirect()->route('transactions.success')->with('earnedPoints', $earnedPoints)->with('discountNominal', $discountNominal);
     }
 
     /**
@@ -87,5 +113,13 @@ class TransactionController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
         return view('transactions.history', compact('transactions'));
-    }    
+    }
+  
+    public function success()
+    {
+        if (!session()->has('earnedPoints')) {
+            return redirect()->route('transactions.history');
+        }
+        return view('transactions.success');
+    }
 }
