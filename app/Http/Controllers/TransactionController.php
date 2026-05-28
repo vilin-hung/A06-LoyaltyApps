@@ -37,41 +37,61 @@ class TransactionController extends Controller
             'quantity' => 'required|integer|min:1',
         ]);
         
-        $user = Auth::user();
+        $items = [['product_id' => $request->product_id, 'quantity' => $request->quantity]];
         
-        $product = Product::findOrFail($request->product_id);
-        $subtotal = $product->price * $request->quantity;
-
-        // Mengambil persentase diskon dari tier user (0, 5, atau 10)
-        $discountPercentage = $user->membership->discount_percentage;
-        $discountNominal = $subtotal * ($discountPercentage / 100);
-        $finalAmount = $subtotal - $discountNominal;    
-
-        $transaction = new Transaction();
-        $transaction->user_id = Auth::id(); // Menyimpan ID user yang login
-        $transaction->total_amount = $finalAmount;
-        $transaction->save();
-        
-        // Mengambil nilai pengali (multiplier) berdasarkan tier user saat ini
-        $multiplier = $user->membership->point_multiplier; 
-        $basePoints = floor($finalAmount / 30000);
-        $earnedPoints = $basePoints * $multiplier;
-
-        // Tambahkan poin dan total belanjaan ke tabel user
-        $user->current_points += $earnedPoints;
-        $user->total_spent += $finalAmount; 
-
-        // Mengecek apakah user dapat naik tier setelah transaksi
-        if ($user->total_spent >= 800000) {
-            $user->membership_id = 3; // Tier membership diupdate ke Platinum
-        } elseif ($user->total_spent >= 300000) {
-            $user->membership_id = 2; // Tier membership diupdate ke Gold
-        } else {
-            $user->membership_id = 1; // Tier membership tetap di Silver
+        try {
+            $result = TransactionService::processOrder(auth()->id(), $items);
+            return redirect()->route('transactions.success')
+                ->with('earnedPoints', $result['points'])
+                ->with('discountNominal', 0);
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMesssage());
         }
+    // }
+    //     $user = Auth::user();        
+    //     $product = Product::findOrFail($request->product_id);
+    //     $subtotal = $product->price * $request->quantity;
 
-        $user->save();
-        return redirect()->route('transactions.success')->with('earnedPoints', $earnedPoints)->with('discountNominal', $discountNominal);
+    //     // Mengambil persentase diskon dari tier user (0, 5, atau 10)
+    //     $discountPercentage = $user->membership->discount_percentage;
+    //     $discountNominal = $subtotal * ($discountPercentage / 100);
+    //     $finalAmount = $subtotal - $discountNominal;    
+
+    //     // cek saldo user
+    //     if ($user->saldo < $finalAmount) {
+    //         return back()->with('error', 'Saldo tidak mencukupi.');
+    //     }
+
+    //     // Menghitung poin, ambil multiplier berdasarkan tier user saat ini
+    //     $multiplier = $user->membership->point_multiplier; 
+    //     $basePoints = floor($finalAmount / 30000);
+    //     $earnedPoints = $basePoints * $multiplier;
+
+    //     // simpan transaksi
+    //     $transaction = new Transaction();
+    //     $transaction->user_id = $user->id; 
+    //     $transaction->total_amount = $finalAmount;
+    //     $transaction->points_earned = $earnedPoints;
+    //     $transaction->save();
+        
+    //     // update user
+    //     $user->saldo -= $finalAmount;
+    //     $user->total_spent += $finalAmount; 
+    //     $user->points += $earnedPoints;
+
+    //     // update membership (naik tier atau tidak)
+    //     if ($user->total_spent >= 800000) {
+    //         $user->membership_id = 3; // Tier membership diupdate ke Platinum
+    //     } elseif ($user->total_spent >= 300000) {
+    //         $user->membership_id = 2; // Tier membership diupdate ke Gold
+    //     } else {
+    //         $user->membership_id = 1; // Tier membership tetap di Silver
+    //     }
+
+    //     $user->save();
+    //     return redirect()->route('transactions.success')
+    //         ->with('earnedPoints', $earnedPoints)
+    //         ->with('discountNominal', $discountNominal);
     }
 
     /**
