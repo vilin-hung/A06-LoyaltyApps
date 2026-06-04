@@ -31,6 +31,7 @@ class AuthController extends Controller
         ]);
 
         if (Auth::attempt($credentials)) {
+            // Regenerasi ID session untuk mencegah Session Fixation
             $request->session()->regenerate();
 
             // Cek role, redirect sesuai role
@@ -38,11 +39,11 @@ class AuthController extends Controller
                 return redirect()->route('admin.dashboard');
             }
 
-            // Jika user berhasil login langsung lempar ke halaman utama 
-            return redirect()->intended('/');
+            // Redirect intended 
+            return redirect()->intended(route('home'));
         }
 
-        // Jika error
+        // Jika login gagal
         return back()->withErrors([
             'email' => 'Email atau password yang kamu masukkan salah.',
         ])->onlyInput('email');
@@ -51,27 +52,38 @@ class AuthController extends Controller
     // Logika signup
     public function signup(Request $request)
     {
-        // Validasi Data
+        // Validasi data signup
         $validatedData = $request->validate([
             'name' => 'required|string|max:80',
             'email' => 'required|email|unique:users',
-            'password' => ['required', 'string', 'min:8', 'confirmed'], 
+            'password' => [
+                'required', 
+                'string', 
+                'min:8', 
+                'confirmed',
+            ], 
         ]);
 
-        // Buat user baru 
+        // Email huruf kecil untuk konsistensi
+        $email = strtolower($validatedData['email']);
+
+        // Buat user baru
         $user = User::create([
             'name' => $validatedData['name'],
-            'email' => $validatedData['email'],
+            'email' => $email,
             'password' => Hash::make($validatedData['password']),
-            'saldo' => 0,          // Default saldo awal Rp 0
-            'points' => 0,         // Default poin awal 0
-            'role' => 'user',      // Otomatis terdaftar sebagai user 
+            'saldo' => 0,
+            'points' => 0,
+            'role' => 'user', //default
         ]);
 
-        // Setelah berhasil daftar, otomatis login
+        // Auto login setelah daftar
         Auth::login($user);
+        
+        // Regenerasi session setelah login
+        $request->session()->regenerate();
 
-        return redirect()->route('home');
+        return redirect()->route('home')->with('success', 'Akun berhasil dibuat');
     }
     
     // Logika logout 
@@ -79,10 +91,10 @@ class AuthController extends Controller
     {
         Auth::logout();
         
-        // Bersihkan session agar aman
+        // Invalidate session dan regenerate token 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('show.login');
+        return redirect()->route('login');
     }
 }
