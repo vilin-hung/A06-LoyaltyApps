@@ -31,7 +31,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     // Home page redirects
     Route::get('/', function () {
-        return view('home');
+        return view('home', ['user' => auth()->user()]);
     })->name('home');
 
     // User
