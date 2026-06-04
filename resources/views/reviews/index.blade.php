@@ -2,11 +2,32 @@
 <html>
 <head>
     <title>Reviews</title>
+    <style>
+        .btn {
+            padding: 5px 10px;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+            color: black;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 
 <!-- Halaman untuk menampilkan daftar review -->
 <h1>Daftar Review</h1>
+
+@if(Auth::check() && Auth::user()->role == 'admin')
+    <p>
+        <a href="{{ route('admin.dashboard') }}" class="btn">
+            Kembali ke Dashboard
+        </a>  
+    </p>
+@endif
+<br>
 
 <table border="1" cellpadding="10">
     <tr>
