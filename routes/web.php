@@ -17,12 +17,13 @@ use App\Http\Middleware\AdminMiddleware;
 Route::middleware('guest')->group(function () {
     // Authentication
     Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
-    Route::post('login', [AuthController::class, 'login'])->name('login.submit');
+    
+    // Rate Limiting (keamanan)
+    Route::post('login', [AuthController::class, 'login'])->name('login.submit')->middleware('throttle:5,1');
     
     Route::get('signup', [AuthController::class, 'showSignupForm'])->name('signup');
     Route::post('signup', [AuthController::class, 'signup'])->name('signup.submit');
 });
-
 
 /*
     Authenticated Routes (Wajib Login)
@@ -30,7 +31,7 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     // Home page redirects
     Route::get('/', function () {
-        return view('home');
+        return view('home', ['user' => auth()->user()]);
     })->name('home');
 
     // User
@@ -42,33 +43,33 @@ Route::middleware('auth')->group(function () {
 
     // Products
     Route::resource('products', ProductController::class);
-
-    // Reviews 
+    
+    // Reviews
     Route::resource('reviews', ReviewController::class);
 
     // Vouchers Management
     Route::resource('vouchers', VoucherController::class);
     Route::resource('memberships', MembershipController::class);
     
-    // Redeem Points 
+    // Redeem Points
     Route::get('/redeem', [RedeemController::class, 'create'])->name('redeem.create');
     Route::post('/redeem', [RedeemController::class, 'store'])->name('redeem.store');
     Route::get('/redeem/history', [RedeemController::class, 'history'])->name('redeem.history');
-  
-    // Transactions 
+
+    // Transactions
     Route::get('/transactions/success', [TransactionController::class, 'success'])->name('transactions.success');
     Route::get('/transactions/history', [TransactionController::class, 'history'])->name('transactions.history');
     Route::resource('transactions', TransactionController::class);
 
-     // Logout
-    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+     // Logout 
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout.submit');
 });
 
-
 /*
-    Admin Routes (Wajib Login & Wajib Admin)
+    Admin Routes (Wajib Login & Admin)
 */
-Route::middleware(['auth', 'admin'])->group(function () {
+Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     // Halaman Dashboard Admin
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');
