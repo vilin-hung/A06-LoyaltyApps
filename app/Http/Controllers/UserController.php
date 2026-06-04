@@ -26,20 +26,29 @@ class UserController extends Controller
     public function changePassword(Request $request)
     {
         $user = auth()->user();
+        
+        // Validasi dengan konfirmasi password baru
         $request->validate([
             'old_password' => 'required|string',
-            'new_password' => 'required|string|min:8|confirmed',
+            'new_password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
         ]);
 
+        // Cek password lama sebelum update
         if (!Hash::check($request->old_password, $user->password)) {
             return back()->withErrors(['old_password' => 'Password lama tidak sesuai']);
         }
 
+        // Update password baru dengan hash
         $user->update([
             'password' => Hash::make($request->new_password)
         ]);
 
-        return redirect()->route('profile')->with('success', 'Password updated!!');
+        return redirect()->route('profile')->with('success', 'Password berhasil diperbarui');
     }
 
     // Menampilkan poin user
