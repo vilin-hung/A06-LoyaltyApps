@@ -1,33 +1,31 @@
-@extends('layouts.app') 
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Transaksi Sukses</title>
+</head>
+<body>
 
-@section('content')
-<div class="container mt-5">
-  <div class="row justify-content-center">
-    <div class="col-md-6 text-center">
-      <div class="card shadow-sm border-0">
-        <div class="card-body py-5">
-          <h1 class="display-4 text-success mb-3">
-            <i class="bi bi-check-circle-fill"></i>
-          </h1>
-          <h2 class="mb-3">Transaksi Berhasil!</h2>
-          <p class="text-muted mb-4">Terima kasih, pesananmu sedang kami proses.</p>
+  <div style="text-align: center; margin-top: 50px;">
+    <h1 style="color: green;">Pembayaran Berhasil!</h1>
+    <p>Terima kasih telah melakukan pembelian di toko kami.</p>
 
-          <div class="bg-light p-3 rounded mb-4 text-start">
-            <p class="mb-2">
-              Diskon Tier: <span class="float-end fw-bold text-success">- Rp {{ number_format(session('discountNominal'), 0, ',', '.') }}</span>
-            </p>
-            <p class="mb-0">
-              Poin Didapat: <span class="float-end fw-bold text-primary">+ {{ session('earnedPoints') }} Poin</span>
-            </p>
-          </div>
 
-          <div class="d-grid gap-2 d-md-block">
-            <a href="{{ route('transactions.history') }}" class="btn btn-outline-secondary px-4">Lihat Riwayat</a>
-            <a href="{{ route('transactions.create') }}" class="btn btn-primary px-4">Belanja Lagi</a>
-          </div>
-        </div>
-      </div>
+    @if(session('success'))
+      <p><strong>Status:</strong> {{ session('success') }}</p>
+    @endif
+
+    <div style="background-color: #f0fdf4; border: 1px solid #bbf7d0; display: inline-block; padding: 15px 30px; border-radius: 8px;">
+      <h3 style="margin: 0; color: #16a34a;">Selamat! Kamu Mendapatkan:</h3>
+      <p style="font-size: 24px; font-weight: bold; margin: 10px 0; color: #15803d;">
+          +{{ session('earnedPoints', 0) }} Poin
+        </p>
     </div>
+
+    <p style="margin-top: 30px;">
+        <a href="{{ route('products.index') }}" style="padding: 10px 15px; background-color: #3b82f6; color: white; text-decoration: none; border-radius: 5px;">Belanja Lagi</a>
+        <a href="{{ route('transactions.history') }}" style="padding: 10px 15px; background-color: #6b7280; color: white; text-decoration: none; border-radius: 5px; margin-left: 10px;">Lihat Riwayat Transaksi</a>
+    </p>
   </div>
-</div>
-@endsection
+
+</body>
+</html>

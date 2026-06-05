@@ -2,13 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ReviewController;
-use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\RedeemController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\VoucherController;
 use App\Http\Middleware\AdminMiddleware;
 
 /*
@@ -34,36 +35,44 @@ Route::middleware('auth')->group(function () {
         return view('home', ['user' => auth()->user()]);
     })->name('home');
 
-    // User
+    // Auth: User
     Route::get('/profile', [UserController::class, 'profile'])->name('profile');
     Route::get('/change-password', [UserController::class, 'showChangePassword'])->name('change-password');
     Route::post('/change-password', [UserController::class, 'changePassword'])->name('change-password.submit');
     Route::get('/points', [UserController::class, 'points'])->name('points');
     Route::get('/saldo', [UserController::class, 'saldo'])->name('saldo');
 
+    // Auth: Logout 
+    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout.submit');
+
+    // Carts
+    Route::post('/checkout', [CartController::class, 'checkout'])->name('carts.checkout');
+    Route::resource('carts', CartController::class);
+
+    // Memberships
+    Route::resource('memberships', MembershipController::class);
+
+    // News
+    
     // Products
     Route::resource('products', ProductController::class);
-    
-    // Reviews
-    Route::resource('reviews', ReviewController::class);
 
-    // Vouchers Management
-    Route::resource('vouchers', VoucherController::class);
-    Route::resource('memberships', MembershipController::class);
-    
     // Redeem Points
     Route::get('/redeem', [RedeemController::class, 'create'])->name('redeem.create');
     Route::post('/redeem', [RedeemController::class, 'store'])->name('redeem.store');
     Route::get('/redeem/history', [RedeemController::class, 'history'])->name('redeem.history');
+    
+    // Reviews
+    Route::resource('reviews', ReviewController::class);
 
     // Transactions
     Route::get('/transactions/success', [TransactionController::class, 'success'])->name('transactions.success');
     Route::get('/transactions/history', [TransactionController::class, 'history'])->name('transactions.history');
     Route::resource('transactions', TransactionController::class);
 
-     // Logout 
-    Route::get('logout', [AuthController::class, 'logout'])->name('logout');
-    Route::post('logout', [AuthController::class, 'logout'])->name('logout.submit');
+    // Vouchers
+    Route::resource('vouchers', VoucherController::class);
 });
 
 /*

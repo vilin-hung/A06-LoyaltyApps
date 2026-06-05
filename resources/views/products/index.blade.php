@@ -67,8 +67,10 @@
 
             <!-- Button add to cart product -->
             @if(!Auth::check() || Auth::user()->role !== 'admin')
-                <form action="{{ route('cart.store', $product->id) }}" method="POST">
+                <form action="{{ route('carts.store', $product->id) }}" method="POST">
                     @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+                    <input type="hidden" name="quantity" value="1">
                     <button type="submit" class="btn">Add To Cart</button>
                 </form> 
             @endif 

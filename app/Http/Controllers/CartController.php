@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\Redeem;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
 use App\Services\TransactionService;
@@ -15,24 +16,83 @@ class CartController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $cartItems = Cart::where('user_id', auth()->id())->with('product')->get();
-        $total = $cartItems->sum(function ($item) {
-            return $item->product->price * $item->quantity;
-        });
-        return view('cart.index', compact('cartItems', 'total'));
+        $cartItems = Cart::where('user_id', auth()->id())
+            ->with('product')
+            ->get();
+    
+        $myVouchers = Redeem::where('user_id', auth()->id())
+            ->with('voucher')
+            ->get()
+            ->pluck('voucher');
+
+        $checkedIds = $request->query('cart_ids') ?? $request->input('cart_ids') ?? [];
+        $selectedVoucherId = $request->input('voucher_id');
+
+        $subtotalChosen = 0;
+        $voucherDiscount = 0;
+        $membershipDiscount = 0;
+
+        if (is_array($checkedIds) && count($checkedIds) > 0) {
+            $itemsTerpilih = Cart::whereIn('id', $checkedIds)->with('product')->get();
+            foreach ($itemsTerpilih as $item) {
+                $subtotalChosen += $item->product->price * $item->quantity;
+            }
+
+            $user = auth()->user();
+            $membership = \App\Models\Membership::where('min_transaction', '<=', $user->total_spent)
+                ->orderBy('min_transaction', 'desc')
+                ->first();
+                
+            if ($membership) {
+                $membershipDiscount = $subtotalChosen * ($membership->discount_percentage / 100);
+            }
+
+            // Hitung potongan voucher
+            if ($selectedVoucherId) {
+                $v = \App\Models\Voucher::find($selectedVoucherId);
+                if ($v) {
+                    $voucherDiscount = $v->discount_amount;
+                }
+            }
+        }
+
+    $totalFinal = $subtotalChosen - $membershipDiscount - $voucherDiscount;
+    if ($totalFinal < 0) $totalFinal = 0;
+        return view('carts.index', compact(
+            'cartItems', 
+            'myVouchers', 
+            'subtotalChosen', 
+            'membershipDiscount', 
+            'voucherDiscount', 
+            'totalFinal',
+            'checkedIds',
+            'selectedVoucherId'
+        ));
     }
 
-    // Menambah produk ke cart
-    public function add(Request $request, Product $product)
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $products = \App\Models\Product::all();
+        return view('carts.create', compact('products'));
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
     {
         $request->validate([
+            'product_id' => 'required|exists:products,id',
             'quantity' => 'required|integer|min:1',
         ]);
 
         $cart = Cart::where('user_id', auth()->id())
-                    ->where('product_id', $product->id)
+                    ->where('product_id', $request->product_id)
                     ->first();
 
         if ($cart) {
@@ -43,30 +103,12 @@ class CartController extends Controller
             // Jika belum, buat baru
             Cart::create([
                 'user_id' => auth()->id(),
-                'product_id' => $product->id,
+                'product_id' => $request->product_id,
                 'quantity' => $request->quantity,
             ]);
         }
 
-        return redirect()->route('cart.index')->with('success', 'Produk ditambahkan ke keranjang.');
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+        return redirect()->route('carts.index')->with('success', 'Produk ditambahkan ke keranjang.');
     }
 
     /**
@@ -74,7 +116,7 @@ class CartController extends Controller
      */
     public function show(Cart $cart)
     {
-        //
+        return view('carts.show', compact('cart'));
     }
 
     /**
@@ -82,7 +124,11 @@ class CartController extends Controller
      */
     public function edit(Cart $cart)
     {
-        //
+        if ($cart->user_id !== auth()->id()) {
+            abort(403);
+        }
+
+        return view('carts.edit', compact('cart'));
     }
 
     /**
@@ -101,7 +147,7 @@ class CartController extends Controller
         $cart->quantity = $request->quantity;
         $cart->save();
 
-        return redirect()->route('cart.index')->with('success', 'Jumlah diperbarui.');
+        return redirect()->route('carts.index')->with('success', 'Jumlah diperbarui.');
     }
 
     /**
@@ -113,29 +159,47 @@ class CartController extends Controller
             abort(403);
         }
         $cart->delete();
-        return redirect()->route('cart.index')->with('success', 'Item dihapus dari keranjang.');
+        return redirect()->route('carts.index')->with('success', 'Item dihapus dari keranjang.');
     }
 
     // Checkout: mengubah semua item di cart menjadi transaksi
-    public function checkout()
+    public function checkout(Request $request)
     {
-        $cartItems = Cart::where('user_id', auth()->id())->with('product')->get();
+        // checkbox produk untuk checkout
+        $cartIds = $request->input('cart_ids', []);
+        if (empty($cartIds)) {
+            return redirect()->route('carts.index')->with('error', 'Pilih minimal satu produk untuk check out.');
+        }
+
+        $cartItems = Cart::where('user_id', auth()->id())
+            ->whereIn('id', $cartIds)
+            ->with('product')
+            ->get();
 
         if ($cartItems->isEmpty()) {
-            return redirect()->route('cart.index')->with('error', 'Keranjang kosong.');
+            return redirect()->route('carts.index')->with('error', 'Keranjang kosong.');
         }
+
         $items = $cartItems->map(function ($cart) {
             return ['product_id' => $cart->product_id, 'quantity' => $cart->quantity];
         })->toArray();
 
         try {
-            $result = TransactionService::processOrder(auth()->id(), $items);
+            $voucherId = $request->input('voucher_id') ?: null;
+
+            $result = TransactionService::processOrder(auth()->id(), $items, $voucherId);
+
             // Setelah transaksi sukses, hapus cart
-            Cart::where('user_id', auth()->id())->delete();
-            return redirect()->route('transactions.history')
-                ->with('success', "Checkout berhasil! Poin +{$result['points']}");
+            Cart::where('user_id', auth()->id())
+                ->whereIn('id', $cartsIds)
+                ->delete();
+
+            return redirect()->route('transactions.success')
+                ->with('success', "Checkout berhasil! Poin")
+                ->with('earnedPoints', $result['points'] ?? 0);
+
         } catch (\Exception $e) {
-            return redirect()->route('cart.index')->with('error', $e->getMessage());
+            return redirect()->route('carts.index')->with('error', $e->getMessage());
         }
     }
 }
