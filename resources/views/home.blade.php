@@ -20,7 +20,7 @@
     <h1>Halo, {{ auth()->user()->name }}</h1>
     
     <h2>Poin: {{ auth()->user()->points }}</h2>
-    <h2>Rp {{ number_format($user->saldo, 0, ',', '.') }}</h2>
+    <h2>Saldo: Rp {{ number_format($user->saldo, 0, ',', '.') }}</h2>
     
     <h3>Fitur:</h3>
     <ul>
