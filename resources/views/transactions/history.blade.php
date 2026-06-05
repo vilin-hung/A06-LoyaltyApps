@@ -1,44 +1,49 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Riwayat Transaksi</title>
+</head>
+<body>
 
-@section('content')
-<div class="container">
-  <h1>Riwayat Transaksi</h1>
+    <h1>Riwayat Transaksiku</h1>
+    
+    <p>
+        <a href="{{ route('carts.index') }}">Kembali ke Keranjang</a> | 
+        <a href="{{ route('products.index') }}">Ke Daftar Produk</a>
+    </p>
 
-  @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-  @endif
+    @if(session('success'))
+        <p style="color: green;"><strong>{{ session('success') }}</strong></p>
+    @endif
 
-  @if($transactions->isEmpty())
-    <p>Belum ada transaksi.</p>
-  @else
-    <table class="table table-bordered">
-      <thead>
-        <tr>
-          <th>ID</th>
-          <th>Tanggal</th>
-          <th>Total (Rp)</th>
-          <th>Poin Didapat</th>
-          <th>Detail</th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach($transactions as $transaction)
-        <tr>
-          <td>{{ $transaction->id }}</td>
-          <td>{{ $transaction->created_at }}</td>
-          <td>{{ number_format($transaction->total_amount) }}</td>
-          <td>{{ $transaction->points_earned }}</td>
-          <td>
-            <ul>
-            @foreach($transaction->items as $item)
-              <li>{{ $item->product->name }} x{{ $item->quantity }} = Rp {{ number_format($item->price * $item->quantity) }}</li>
+    @if($transactions->isEmpty())
+        <p>Kamu belum pernah melakukan transaksi apapun.</p>
+    @endif
+
+    <table border="1" cellpadding="10" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background-color: #f3f4f6;">
+                <th>ID Transaksi</th>
+                <th>Tanggal & Waktu</th>
+                <th>Total Pembayaran</th>
+                <th>Poin yang Didapat</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($transactions as $trx)
+                <tr>
+                    <td>#{{ $trx->id }}</td>
+                    <td>{{ $trx->created_at->format('d M Y, H:i') }}</td>
+                    <td>Rp {{ number_format($trx->total_amount, 0, ',', '.') }}</td>
+                    <td style="color: green; font-weight: bold;">+{{ $trx->points_earned }} Poin</td>
+                    <td>
+                        <a href="{{ route('transactions.show', $trx->id) }}">Detail</a>
+                    </td>
+                </tr>
             @endforeach
-            </ul>
-          </td>
-        </tr>
-        @endforeach
-      </tbody>
+        </tbody>
     </table>
-  @endif
-</div>
-@endsection
+
+</body>
+</html>
