@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('voucher_id')->nullable()->constrained()->onDelete('set null'); 
             $table->decimal('total_amount', 10, 2);
             $table->integer('points_earned')->default(0);
             $table->timestamps();
