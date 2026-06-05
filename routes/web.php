@@ -40,6 +40,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/change-password', [UserController::class, 'changePassword'])->name('change-password.submit');
     Route::get('/points', [UserController::class, 'points'])->name('points');
     Route::get('/saldo', [UserController::class, 'saldo'])->name('saldo');
+    Route::post('/saldo/topup', [UserController::class, 'topup'])->name('saldo.topup');     
 
     // Products
     Route::resource('products', ProductController::class);
