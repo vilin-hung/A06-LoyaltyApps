@@ -102,8 +102,10 @@ class RedeemController extends Controller
      */
     public function history()
     {
-        $redeems = Redeem::where('user_id', Auth::id())->get();
-
+        $redeems = Redeem::with('voucher')
+        ->where('user_id', Auth::id())
+        ->get();
+        
         return view('redeem.redeem-history', compact('redeems'));
     }
 }
