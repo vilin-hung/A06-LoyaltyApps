@@ -52,7 +52,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('carts', CartController::class);
 
     // Memberships
-    Route::resource('memberships', MembershipController::class);
+    // Route::resource('memberships', MembershipController::class);
 
     // News
     
@@ -84,4 +84,6 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
+
+    Route::resource('memberships', MembershipController::class);
 });

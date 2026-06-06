@@ -1,57 +1,82 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Memberships</title>
+    <style>
+        .btn {
+            padding: 5px 10px;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+            color: black;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
 
-@section('content')
-<div class="container mt-5">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Daftar Tier Membership</h2>
-    @if(auth()->user()->is_admin)
-      <a href="{{ route('memberships.create') }}" class="btn btn-primary">Tambah Tier</a>
+<!-- Halaman daftar all tier membership -->
+<h1>Daftar Tier Membership</h1>
+
+<p>
+    <a href="{{ route('admin.dashboard') }}" class="btn">
+        Kembali ke Dashboard
+    </a>
+    
+    @if(Auth::check() && auth()->user()->is_admin)
+        <!-- Button 'tambah tier membership' hanya untuk admin -->
+        &nbsp;&nbsp;<a href="{{ route('memberships.create') }}" class="btn">
+            Tambah Tier Membership
+        </a>
     @endif
-  </div>
+</p>
 
-  @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-  @endif
+@if(session('success'))
+    <p style="color: green;"><b>{{ session('success') }}</b></p>
+@endif
+<br>
 
-  <div class="row">
+<table border="1" cellpadding="10">
+    <tr>
+        <th>Level</th>
+        <th>Min. Transaksi</th>
+        <th>Pengganda Poin</th>
+        <th>Diskon Otomatis</th>
+        <th>Aksi</th>
+    </tr>
+
     @foreach($memberships as $membership)
-      <div class="col-md-4 mb-4">
-        <div class="card shadow-sm border-0 h-100">
-          <div class="card-header bg-dark text-white text-center py-3">
-            <h4 class="mb-0 text-uppercase fw-bold">{{ $membership->level }}</h4>
-          </div>
-          <div class="card-body">
-            <p class="text-muted text-center small mb-3">{{ $membership->description ?? 'Tidak ada deskripsi' }}</p>
+    <tr>
+        <td><strong>{{ $membership->level }}</strong></td>
+        <td>Rp {{ number_format($membership->min_transaction, 0, ',', '.') }}</td>
+        <td>x{{ $membership->point_multiplier }}</td>
+        <td>{{ $membership->discount_percentage }}%</td>
+        
+        <td>
+            <!-- Button detail membership (bisa diakses semua user) -->
+            <a href="{{ route('memberships.show', $membership->id) }}" class="btn">
+                Detail Membership
+            </a>
             
-            <ul class="list-group list-group-flush mb-3">
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                Min. Transaksi
-                <strong>Rp {{ number_format($membership->min_transaction, 0, ',', '.') }}</strong>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                Pengganda Poin
-                <span class="badge bg-success rounded-pill">x{{ $membership->point_multiplier }}</span>
-              </li>
-              <li class="list-group-item d-flex justify-content-between align-items-center">
-                Diskon Khusus
-                <strong>{{ $membership->discount_percentage }}%</strong>
-              </li>
-            </ul>
+            <!-- Button edit dan delete membership (admin only) -->
+            @if(Auth::check() && auth()->user()->is_admin)
+                <a href="{{ route('memberships.edit', $membership->id) }}" class="btn">
+                    Edit
+                </a>
+                <form action="{{ route('memberships.destroy', $membership->id) }}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
 
-            @if(auth()->user()->is_admin)
-              <div class="mt-auto border-top pt-3 d-flex gap-2">
-                <a href="{{ route('memberships.edit', $membership->id) }}" class="btn btn-sm btn-outline-primary w-50">Edit</a>
-                <form action="{{ route('memberships.destroy', $membership->id) }}" method="POST" class="w-50" onsubmit="return confirm('Yakin ingin menghapus tier ini?')">
-                  @csrf
-                  @method('DELETE')
-                  <button type="submit" class="btn btn-sm btn-outline-danger w-100">Hapus</button>
+                    <button type="submit" class="btn" onclick="return confirm('Hapus tier ini?')">
+                        Delete
+                    </button>
                 </form>
-              </div>
             @endif
-          </div>
-        </div>
-      </div>
+        </td>
+    </tr>
     @endforeach
-  </div>
-</div>
-@endsection
+</table>
+</body>
+</html>

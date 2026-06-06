@@ -191,7 +191,7 @@ class CartController extends Controller
 
             // Setelah transaksi sukses, hapus cart
             Cart::where('user_id', auth()->id())
-                ->whereIn('id', $cartsIds)
+                ->whereIn('id', $cartIds)
                 ->delete();
 
             return redirect()->route('transactions.success')
