@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
 <head>
-    <meta charset="UTF-8">
     <title>Transaksi Berhasil</title>
 </head>
 <body>
