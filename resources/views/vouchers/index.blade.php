@@ -1,66 +1,115 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Vouchers</title>
+    <style>
+        .btn {
+            padding: 5px 10px;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+            color: black;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
 
-@section('content')
-<div class="container mt-5">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Daftar Voucher</h2>
-    @if(auth()->user()->is_admin)
-      <a href="{{ route('vouchers.create') }}" class="btn btn-primary">Tambah Voucher</a>
-    @endif
-  </div>
+<!-- Halaman daftar all voucher -->
+<h1>Daftar Voucher</h1>
+<p>
+    <a href="{{ route('home') }}" class="btn">
+        Kembali ke Beranda
+    </a>
+</p>
 
-  @if(session('success'))
-    <div class="alert alert-success">{{ session('success') }}</div>
-  @endif
+@if(Auth::check() && auth()->user()->is_admin)
+    <p>
+        <a href="{{ route('admin.dashboard') }}" class="btn">
+            Kembali ke Dashboard
+        </a>
+        <!-- Button 'tambah voucher' hanya untuk admin -->
+        &nbsp;&nbsp;<a href="{{ route('vouchers.create') }}" class="btn">
+            Tambah Voucher
+        </a>
+    </p>
+@endif
 
-  <div class="row">
+@if(session('success'))
+    <p style="color: green;"><b>{{ session('success') }}</b></p>
+@endif
+<br>
+
+<table border="1" cellpadding="10">
+    <tr>
+        <th>Nama</th>
+        <th>Kode</th>
+        <th>Diskon</th>
+        <th>Poin Dibutuhkan</th>
+        <th>Kuota</th>
+        <th>Status</th>
+        <th>Aksi</th>
+    </tr>
+
     @foreach($vouchers as $voucher)
-      <div class="col-md-4 mb-4">
-        <div class="card shadow-sm border-0 h-100 {{ !$voucher->is_active ? 'opacity-50' : '' }}">
-          <div class="card-body position-relative">
-            
-            @if(!$voucher->is_active)
-              <span class="badge bg-danger position-absolute top-0 end-0 m-3">Nonaktif</span>
+    <tr>
+        <!-- Menampilkan detail voucher -->
+        <td>{{ $voucher->name }}</td>
+        <td>{{ $voucher->code }}</td>
+        <td>
+            @if($voucher->discount_type == 'percentage')
+                {{ $voucher->discount_value }}%
+            @else
+                Rp {{ number_format($voucher->discount_value, 0, ',', '.') }}
             @endif
+        </td>
+        <td>{{ $voucher->points_required }}</td>
+        <td>{{ $voucher->quota }}</td>
+        
+        <td>
+            @if($voucher->is_active)
+                Aktif
+            @else
+                Nonaktif
+            @endif
+        </td>
+        
+        <td>
+            <!-- Button detail voucher (bisa diakses semua user) -->
+            <a href="{{ route('vouchers.show', $voucher->id) }}" class="btn">
+                Detail Voucher
+            </a>
 
-            <p class="text-uppercase fw-bold text-primary mb-1 small">{{ $voucher->code }}</p>
-            <h5 class="card-title fw-bold">{{ $voucher->name }}</h5>
+            @if(Auth::check() && !auth()->user()->is_admin)
+                <form action="{{ route('redeem.store') }}" method="POST" style="display:inline;">
+                    @csrf
+                    <input type="hidden" name="voucher_id" value="{{ $voucher->id }}">
+                    <!-- Button 'tukar voucher' hanya untuk user -->
+                    <button type="submit" class="btn" {{ ($voucher->quota <= 0 || !$voucher->is_active) ? 'disabled' : '' }}>
+                        Tukarkan
+                    </button>
+                </form> 
+            @endif 
             
-            <p class="text-muted mb-2 small">{{ $voucher->description ?? 'Tidak ada deskripsi' }}</p>
+            @if(Auth::check() && auth()->user()->is_admin)
+                <!-- Button 'edit voucher' dan 'hapus voucher' hanya untuk admin -->
+                <a href="{{ route('vouchers.edit', $voucher->id) }}" class="btn">
+                    Edit
+                </a>
+                <form action="{{ route('vouchers.destroy', $voucher->id) }}" method="POST" style="display:inline;">
+                    @csrf
+                    @method('DELETE')
 
-            <div class="bg-light p-2 rounded mb-3">
-              <p class="mb-1 fw-bold text-success">
-                Diskon: 
-                @if($voucher->discount_type == 'fixed')
-                  Rp {{ number_format($voucher->discount_value, 0, ',', '.') }}
-                @else
-                  {{ $voucher->discount_value }}%
-                @endif
-              </p>
-              <p class="text-secondary small mb-0">Sisa Kuota: {{ $voucher->quota }}</p>
-            </div>
-            
-            <div class="d-flex justify-content-between align-items-center mt-auto">
-              <span class="badge bg-warning text-dark px-3 py-2 border">{{ $voucher->points_required }} Poin</span>
-              @if(!auth()->user()->is_admin)
-                <form action="{{ route('redeem.store') }}" method="POST">
-                  @csrf
-                  <input type="hidden" name="voucher_id" value="{{ $voucher->id }}">
-                  <button type="submit" class="btn btn-sm btn-success px-3" {{ ($voucher->quota <= 0 || !$voucher->is_active) ? 'disabled' : '' }}>
-                    Tukarkan
-                  </button>
+                    <button type="submit" class="btn" onclick="return confirm('Hapus voucher ini?')">
+                        Delete
+                    </button>
                 </form>
-              @endif
-            </div>
-            @if(auth()->user()->is_admin)
-              <div class="mt-3 border-top pt-3">
-                <a href="{{ route('vouchers.edit', $voucher->id) }}" class="btn btn-sm btn-outline-primary w-100">Edit / Hapus Voucher</a>
-              </div>
             @endif
-          </div>
-        </div>
-      </div>
+        </td>
+    </tr>
     @endforeach
-  </div>
-</div>
-@endsection
+</table>
+</body>
+</html>

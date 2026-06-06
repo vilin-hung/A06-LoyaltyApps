@@ -1,24 +1,49 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Detail Voucher</title>
+</head>
+<body>
 
-@section('content')
-<div class="container mt-5">
-  <div class="card shadow-sm">
-    <div class="card-header bg-primary text-white">
-      <h4 class="mb-0">Detail Voucher: {{ $voucher->name }}</h4>
-    </div>
-    <div class="card-body">
-      <h5 class="text-uppercase fw-bold text-primary">{{ $voucher->code }}</h5>
-      <p>{{ $voucher->description ?? 'Tidak ada deskripsi lengkap.' }}</p>
-            
-      <ul class="list-group mb-3">
-        <li class="list-group-item"><strong>Diskon:</strong> {{ $voucher->discount_type == 'fixed' ? 'Rp ' . number_format($voucher->discount_value, 0, ',', '.') : $voucher->discount_value . '%' }}</li>
-        <li class="list-group-item"><strong>Poin Dibutuhkan:</strong> {{ $voucher->points_required }}</li>
-        <li class="list-group-item"><strong>Sisa Kuota:</strong> {{ $voucher->quota }}</li>
-        <li class="list-group-item"><strong>Masa Aktif:</strong> {{ $voucher->start_date ?? '-' }} s/d {{ $voucher->end_date ?? '-' }}</li>
-      </ul>
+<!-- Menampilkan detail informasi voucher -->
+<h1>{{ $voucher->name }}</h1>
+<p>
+    <a href="{{ route('vouchers.index') }}" class="btn">
+        Kembali
+    </a>
+</p>
 
-      <a href="{{ route('vouchers.index') }}" class="btn btn-secondary">Kembali</a>
-    </div>
-  </div>
-</div>
-@endsection
+<p>Kode: {{ $voucher->code }}</p>
+
+<p>Diskon: 
+    @if($voucher->discount_type == 'percentage')
+        {{ $voucher->discount_value }}%
+    @else
+        Rp {{ number_format($voucher->discount_value, 0, ',', '.') }}
+    @endif
+</p>
+
+<p>Points Required: {{ $voucher->points_required }}</p>
+<p>Quota: {{ $voucher->quota }}</p>
+<p>Description: {{ $voucher->description ?? 'Tidak ada deskripsi.' }}</p>
+
+<p>Masa Aktif: 
+    {{ $voucher->start_date ? \Carbon\Carbon::parse($voucher->start_date)->format('d M Y') : '-' }} 
+    s/d 
+    {{ $voucher->end_date ? \Carbon\Carbon::parse($voucher->end_date)->format('d M Y') : '-' }}
+</p>
+
+<hr>
+
+<!-- Menampilkan syarat dan ketentuan penukaran voucher -->
+<h2>Syarat & Ketentuan</h2>
+
+<ul>
+    <li>Penukaran voucher ini akan memotong saldo poin Anda sebesar <strong>{{ $voucher->points_required }} poin</strong>.</li>
+    <li>Voucher hanya dapat digunakan selama masa aktif berlaku dan kuota masih tersedia.</li>
+    <li>Voucher yang sudah ditukarkan tidak dapat dikembalikan menjadi poin.</li>
+    <li>Status Voucher: <strong>{{ $voucher->is_active ? 'Aktif' : 'Nonaktif' }}</strong></li>
+</ul>
+
+</body>
+</html>

@@ -21,7 +21,7 @@ public function up(): void
         $table->decimal('saldo', 12, 2)->default(0); 
         $table->unsignedInteger('points')->default(0); 
         $table->enum('role', ['user', 'admin'])->default('user');
-        $table->unsignedBigInteger('membership_id')->default(1);
+        $table->unsignedBigInteger('membership_id')->nullable();
         $table->decimal('total_spent', 12, 2)->default(0);
         $table->rememberToken();
         $table->timestamps();

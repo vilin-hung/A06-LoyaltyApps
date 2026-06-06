@@ -12,7 +12,7 @@ class VoucherController extends Controller
      */
     public function index()
     {
-        $vouchers = Voucher::latest()->get();
+        $vouchers = Voucher::where('is_active', true)->latest()->get();
         return view('vouchers.index', compact('vouchers'));
     }
 

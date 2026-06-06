@@ -22,6 +22,10 @@
     <h2>Poin: {{ auth()->user()->points }}</h2>
     <h2>Saldo: Rp {{ number_format($user->saldo, 0, ',', '.') }}</h2>
     
+    <a href="{{ route('vouchers.index') }}" class="btn btn-primary">
+        Lihat Daftar Voucher
+    </a>
+    
     <h3>Fitur:</h3>
     <ul>
         <li><a href="/products">Produk</a></li>

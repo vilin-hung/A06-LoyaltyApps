@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\DB;
 
 class TransactionService
 {
-  public static function processOrder($userId, $items)
+  public static function processOrder($userId, $items, $voucherId = null)
   {
     $user = \App\Models\User::findOrFail($userId);
     $subtotal = 0;
@@ -42,7 +42,7 @@ class TransactionService
     $voucherDiscount = 0;
     if ($voucherId) {
       $voucher = Voucher::findOrFail($voucherId);
-      $voucherDiscount = $voucher->discount_amount ?? 0;
+      $voucherDiscount = $voucher->discount_value ?? 0;
     }
 
     // grand total
@@ -50,12 +50,12 @@ class TransactionService
     if ($finalAmount < 0) $finalAmount = 0; 
 
     // Cek saldo user
-    if ($user->saldo< $total) {
+    if ($user->saldo < $finalAmount) {
       throw new \Exception('Saldo Anda tidak cukup untuk melakukan transaksi');
     }
 
     // Hitung poin berdasarkan tier
-    $pointsEarned = floor($finalAmount / 30000) * $currentMembership;
+    $pointsEarned = floor($finalAmount / 30000) * $currentMembership->point_multiplier;
 
     DB::beginTransaction();
     try {
@@ -69,6 +69,8 @@ class TransactionService
       $user->saldo -= $finalAmount;
       $user->total_spent += $finalAmount;
       $user->points += $pointsEarned;
+      $newMembership = self::getUserTier($user->total_spent);
+      $user->membership_id = $newMembership->id ?? null;
       $user->save();
 
       // Buat transaksi
@@ -78,6 +80,7 @@ class TransactionService
         'total_amount' => $finalAmount,
         'points_earned' => $pointsEarned,
       ]);
+
 
       // Simpan item transaksi
       foreach ($itemsData as $data) {
@@ -105,7 +108,7 @@ class TransactionService
       ->first();
 
     if(!$membership) {
-      return(object) [$id => 1, 'point_multiplier' => 1, 'discount_percentage' => 0];
+      return(object) ['id' => null, 'point_multiplier' => 1, 'discount_percentage' => 0];
     }
 
     return $membership;
