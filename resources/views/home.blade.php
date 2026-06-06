@@ -20,13 +20,17 @@
     <h1>Halo, {{ auth()->user()->name }}</h1>
     
     <h2>Poin: {{ auth()->user()->points }}</h2>
-    <h2>Rp {{ number_format($user->saldo, 0, ',', '.') }}</h2>
+    <h2>Saldo: Rp {{ number_format($user->saldo, 0, ',', '.') }}</h2>
+    
+    <a href="{{ route('vouchers.index') }}" class="btn btn-primary">
+        Lihat Daftar Voucher
+    </a>
     
     <h3>Fitur:</h3>
     <ul>
         <li><a href="/products">Produk</a></li>
-        <li><a href="/cart">Keranjang</a></li>
-        <li><a href="/transactions/history">Riwayat Transaksi</a></li>
+        <li><a href="/carts">Keranjang</a></li>
+        <li><a href="/transactions">Riwayat Transaksi</a></li>
         <li><a href="/redeem">Tukar Poin</a></li>
         <li><a href="/vouchers">Voucher Saya</a></li>
     </ul>

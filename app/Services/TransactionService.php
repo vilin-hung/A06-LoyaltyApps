@@ -2,26 +2,30 @@
 
 namespace App\Services;
 
+use App\Models\Membership;
 use App\Models\Product;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
+use App\Models\User;
+use App\Models\Voucher;
 use Illuminate\Support\Facades\DB;
 
 class TransactionService
 {
-  public static function processOrder($userId, $items)
+  public static function processOrder($userId, $items, $voucherId = null)
   {
     $user = \App\Models\User::findOrFail($userId);
-    $total = 0;
+    $subtotal = 0;
     $itemsData = [];
 
+    // subtotal (harga produk bersih sebelum diskon)
     foreach ($items as $item) {
       $product = Product::findOrFail($item['product_id']);
       if ($product->stock < $item['quantity']) {
         throw new \Exception("Stok {$product->name} tidak cukup");
       }
-      $subtotal = $product->price * $item['quantity'];
-      $total += $subtotal;
+      $itemSubtotal = $product->price * $item['quantity'];
+      $subtotal += $itemSubtotal;
       $itemsData[] = [
         'product' => $product,
         'quantity' => $item['quantity'],
@@ -29,15 +33,29 @@ class TransactionService
       ];
     }
 
+    // cek benefit dari tier
+    $currentMembership = self::getUserTier($user->total_spent);
+    $membershipDiscount = $subtotal * ($currentMembership->discount_percentage / 100);
+    $totalAfterMembership = $subtotal - $membershipDiscount;
+
+    // cek potongan voucher
+    $voucherDiscount = 0;
+    if ($voucherId) {
+      $voucher = Voucher::findOrFail($voucherId);
+      $voucherDiscount = $voucher->discount_value ?? 0;
+    }
+
+    // grand total
+    $finalAmount = $totalAfterMembership - $voucherDiscount;
+    if ($finalAmount < 0) $finalAmount = 0; 
+
     // Cek saldo user
-    if ($user->saldo< $total) {
-      return back()->with('error', 'Saldo tidak cukup');
+    if ($user->saldo < $finalAmount) {
+      throw new \Exception('Saldo Anda tidak cukup untuk melakukan transaksi');
     }
 
     // Hitung poin berdasarkan tier
-    $tier = self::getUserTier($user->total_spent);
-    $multiplier = ($tier == 'Platinum') ? 2 : 1;
-    $pointsEarned = floor($total / 30000) * $multiplier;
+    $pointsEarned = floor($finalAmount / 30000) * $currentMembership->point_multiplier;
 
     DB::beginTransaction();
     try {
@@ -48,17 +66,21 @@ class TransactionService
       }
 
       // Update user
-      $user->saldo -= $total;
-      $user->total_spent += $total;
+      $user->saldo -= $finalAmount;
+      $user->total_spent += $finalAmount;
       $user->points += $pointsEarned;
+      $newMembership = self::getUserTier($user->total_spent);
+      $user->membership_id = $newMembership->id ?? null;
       $user->save();
 
       // Buat transaksi
       $transaction = Transaction::create([
         'user_id' => $user->id,
-        'total_amount' => $total,
+        'voucher_id' => $voucherId,
+        'total_amount' => $finalAmount,
         'points_earned' => $pointsEarned,
       ]);
+
 
       // Simpan item transaksi
       foreach ($itemsData as $data) {
@@ -81,8 +103,14 @@ class TransactionService
 
   private static function getUserTier($totalSpent)
   {
-    if ($totalSpent < 300000) return 'Silver';
-    if ($totalSpent < 800000) return 'Gold';
-    return 'Platinum';
+    $membership = Membership::where('min_transaction', '<=', $totalSpent)
+      ->orderBy('min_transaction', 'desc')
+      ->first();
+
+    if(!$membership) {
+      return(object) ['id' => 1, 'point_multiplier' => 1, 'discount_percentage' => 0];
+    }
+
+    return $membership;
   }
 }

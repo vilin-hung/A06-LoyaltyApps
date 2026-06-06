@@ -12,7 +12,7 @@ class MembershipController extends Controller
      */
     public function index()
     {
-        $memberships = Membership::all();
+        $memberships = Membership::orderBy('min_transaction', 'asc')->get();
         return view('memberships.index', compact('memberships'));
     }
 

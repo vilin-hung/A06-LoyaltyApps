@@ -64,4 +64,21 @@ class UserController extends Controller
         $user = auth()->user();
         return view('user.saldo', compact('user'));
     }
+
+    // Proses top up saldo user
+    public function topup(Request $request)
+    {
+        // Validasi Input
+        $request->validate([
+            'amount' => 'required|integer',
+        ]);
+
+        // Tambah saldo user dengan nominal top up
+        $user = auth()->user();
+        $user->saldo += $request->amount;
+        $user->save();
+
+        // Balik ke page, kirim pesan berhasil
+        return redirect()->route('saldo')->with('success', 'Top up berhasil!');
+    }
 }
