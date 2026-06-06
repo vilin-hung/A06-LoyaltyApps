@@ -3,64 +3,52 @@
 namespace App\Http\Controllers;
 
 use App\Models\Favorite;
-use App\Http\Controllers\Controller;
+use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class FavoriteController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display user's favorite products.
      */
     public function index()
     {
-        //
+        $favorites = Favorite::with('product')
+            ->where('user_id', Auth::id())
+            ->get();
+
+        return view('favorites.index', compact('favorites'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Add product to favorites.
      */
-    public function create()
+    public function store(Product $product)
     {
-        //
+        $exists = Favorite::where('user_id', Auth::id())
+            ->where('product_id', $product->id)
+            ->exists();
+
+        if (!$exists) {
+            Favorite::create([
+                'user_id' => Auth::id(),
+                'product_id' => $product->id,
+            ]);
+        }
+
+        return back()->with('success', 'Produk berhasil ditambahkan ke favorit');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Remove product from favorites.
      */
-    public function store(Request $request)
+    public function destroy(Product $product)
     {
-        //
-    }
+        Favorite::where('user_id', Auth::id())
+            ->where('product_id', $product->id)
+            ->delete();
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Favorite $favorite)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Favorite $favorite)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Favorite $favorite)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Favorite $favorite)
-    {
-        //
+        return back()->with('success', 'Produk berhasil dihapus dari favorit');
     }
 }
