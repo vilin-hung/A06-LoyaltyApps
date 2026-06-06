@@ -108,7 +108,7 @@ class TransactionService
       ->first();
 
     if(!$membership) {
-      return(object) ['id' => null, 'point_multiplier' => 1, 'discount_percentage' => 0];
+      return(object) ['id' => 1, 'point_multiplier' => 1, 'discount_percentage' => 0];
     }
 
     return $membership;
