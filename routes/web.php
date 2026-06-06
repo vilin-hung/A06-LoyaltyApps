@@ -69,7 +69,6 @@ Route::middleware('auth')->group(function () {
 
     // Transactions
     Route::get('/transactions/success', [TransactionController::class, 'success'])->name('transactions.success');
-    Route::get('/transactions/history', [TransactionController::class, 'history'])->name('transactions.history');
     Route::resource('transactions', TransactionController::class);
 
     // Vouchers
