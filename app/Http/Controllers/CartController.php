@@ -91,9 +91,22 @@ class CartController extends Controller
             'quantity' => 'required|integer|min:1',
         ]);
 
+        $product = Product::findOrFail($request->product_id);
+
+        // Jika stock product 0, gagal add to cart
+        if ($product->stock <= 0) {
+            return redirect()->back()->with('error', 'Maaf, stok produk kosong!');
+        }
+
         $cart = Cart::where('user_id', auth()->id())
                     ->where('product_id', $request->product_id)
                     ->first();
+
+        // Jika stock tidak mencukupi
+        if ($cart && ($cart->quantity + $request->quantity) > $product->stock) {
+            return redirect()->back()
+                ->with('error', 'Stok produk tidak mencukupi!');
+        }
 
         if ($cart) {
             // Jika sudah ada, update quantity
@@ -108,7 +121,7 @@ class CartController extends Controller
             ]);
         }
 
-        return redirect()->route('carts.index')->with('success', 'Produk ditambahkan ke keranjang.');
+        return redirect()->back()->with('success', 'Produk ditambahkan ke keranjang.');
     }
 
     /**

@@ -2,8 +2,24 @@
 <html>
 <head>
     <title>Detail Product</title>
+    <style>
+        .btn {
+            padding: 5px 10px;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+            color: black;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
+
+@if(session('error'))
+    <p style="color: red;">{{ session('error') }}</p>
+@endif
 
 @if(session('success'))
     <p style="color: green;">{{ session('success') }}</p>
@@ -35,7 +51,7 @@
 
     <!-- Akses edit hanya untuk pemillik review -->
     @if(Auth::id() == $review->user_id)
-        <a href="{{ route('reviews.edit', $review->id) }}">Edit</a>
+        <a href="{{ route('reviews.edit', $review->id) }}">[Edit]</a>
     @endif
     <hr>
 @empty
@@ -47,17 +63,19 @@
     Tambah Review
 </a>
 <hr>
-<!-- Button add to cart product -->
+
 @if(!Auth::check() || Auth::user()->role !== 'admin')
-<!-- Button add to cart product -->
-    <form action="{{ route('carts.store', $product->id) }}" method="POST">
-        @csrf
-        <input type="hidden" name="product_id" value="{{ $product->id }}">
-        <input type="hidden" name="quantity" value="1">
-        <button type="submit" class="btn">Add To Cart</button>
-    </form> 
-    {{--
-    <a href="{{ route('transactions.order', $product->id) }}" class="btn">
-        Order Now
-    </a> --}}
+    <div style="display: flex; gap: 10px; margin-top: 10px;">
+        <!-- Button add to cart product -->
+        <form action="{{ route('carts.store', $product->id) }}" method="POST">
+            @csrf
+            <input type="hidden" name="product_id" value="{{ $product->id }}">
+            <input type="hidden" name="quantity" value="1">
+            <button type="submit" class="btn">Add To Cart</button>
+        </form> 
+        <!-- Button order now product -->
+        <a href="{{ route('transactions.create', ['product_id' => $product->id, 'quantity' => 1]) }}" class="btn">
+            Order Now
+        </a> 
+    </div>
 @endif
