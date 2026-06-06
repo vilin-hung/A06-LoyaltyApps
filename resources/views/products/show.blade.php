@@ -5,6 +5,10 @@
 </head>
 <body>
 
+@if(session('success'))
+    <p>{{ session('success') }}</p>
+@endif 
+
 <!-- Menampilkan detail informasi product -->
 <h1>{{ $product->name }}</h1>
 <p>
@@ -12,12 +16,10 @@
         Kembali
     </a>
 </p>
-<p>Price: {{ $product->price }}</p>
+<p>Price: Rp {{ number_format($product->price, 2, ',', '.') }}</p>
 <p>Description: {{ $product->description }}</p>
 <p>Category: {{ $product->category }}</p>
-
 <hr>
-
 <!-- Menampilkan daftar review untuk product tertentu -->
 <h2>Reviews</h2>
 
@@ -44,3 +46,15 @@
 <a href="{{ route('reviews.create', ['product_id' => $product->id]) }}">
     Tambah Review
 </a>
+<hr>
+<!-- Button add to cart product -->
+@if(!Auth::check() || Auth::user()->role !== 'admin')
+    <form action="{{ route('cart.store', $product->id) }}" method="POST">
+        @csrf
+        <button type="submit" class="btn">Add To Cart</button>
+    </form>
+
+    <a href="{{ route('transactions.order', $product->id) }}" class="btn">
+        Order Now
+    </a>
+@endif
