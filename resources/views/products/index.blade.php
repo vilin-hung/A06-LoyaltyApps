@@ -65,7 +65,8 @@
             <!-- Button detail product (bisa diakses semua user) -->
             <a href="{{ route('products.show', $product->id) }}" class="btn">
                 Detail
-            </a>          
+            </a>
+            
             <!-- Button edit dan delete product (admin only) -->
             @if(Auth::check() && Auth::user()->role == 'admin')
                 <a href="{{ route('products.edit', $product->id) }}" class="btn">

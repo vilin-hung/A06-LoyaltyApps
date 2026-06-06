@@ -6,8 +6,8 @@
 <body>
 
 @if(session('success'))
-    <p>{{ session('success') }}</p>
-@endif 
+    <p style="color: green;">{{ session('success') }}</p>
+@endif
 
 <!-- Menampilkan detail informasi product -->
 <h1>{{ $product->name }}</h1>
@@ -49,12 +49,15 @@
 <hr>
 <!-- Button add to cart product -->
 @if(!Auth::check() || Auth::user()->role !== 'admin')
-    <form action="{{ route('cart.store', $product->id) }}" method="POST">
+<!-- Button add to cart product -->
+    <form action="{{ route('carts.store', $product->id) }}" method="POST">
         @csrf
+        <input type="hidden" name="product_id" value="{{ $product->id }}">
+        <input type="hidden" name="quantity" value="1">
         <button type="submit" class="btn">Add To Cart</button>
-    </form>
-
+    </form> 
+    {{--
     <a href="{{ route('transactions.order', $product->id) }}" class="btn">
         Order Now
-    </a>
+    </a> --}}
 @endif

@@ -42,7 +42,7 @@ class TransactionService
     $voucherDiscount = 0;
     if ($voucherId) {
       $voucher = Voucher::findOrFail($voucherId);
-      $voucherDiscount = $voucher->discount_value ?? 0;
+      $voucherDiscount = $voucher->discount_amount ?? 0;
     }
 
     // grand total
