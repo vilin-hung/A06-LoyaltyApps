@@ -19,11 +19,6 @@
 
 <!-- Halaman daftar all product -->
 <h1>Daftar Product</h1>
-<p>
-    <a href="{{ route('home') }}" class="btn">
-        Kembali ke Beranda
-    </a>
-</p>
 
 @if(Auth::check() && Auth::user()->role == 'admin')
     <p>
@@ -31,8 +26,15 @@
             Kembali ke Dashboard
         </a>
         <!-- Button 'tambah product' hanya untuk admin -->
-        &nbsp;&nbsp;<a href="{{ route('products.create') }}" class="btn">
+        &nbsp;&nbsp;
+        <a href="{{ route('products.create') }}" class="btn">
             Tambah Product
+        </a>
+    </p>
+@else
+    <p>
+        <a href="{{ route('home') }}" class="btn">
+            Kembali ke Beranda
         </a>
     </p>
 @endif
@@ -64,16 +66,6 @@
             <a href="{{ route('products.show', $product->id) }}" class="btn">
                 Detail
             </a>
-
-            <!-- Button add to cart product -->
-            @if(!Auth::check() || Auth::user()->role !== 'admin')
-                <form action="{{ route('carts.store', $product->id) }}" method="POST">
-                    @csrf
-                    <input type="hidden" name="product_id" value="{{ $product->id }}">
-                    <input type="hidden" name="quantity" value="1">
-                    <button type="submit" class="btn">Add To Cart</button>
-                </form> 
-            @endif 
             
             <!-- Button edit dan delete product (admin only) -->
             @if(Auth::check() && Auth::user()->role == 'admin')
