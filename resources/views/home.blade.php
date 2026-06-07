@@ -9,7 +9,8 @@
         <a href="{{ route('profile') }}">Profil</a> |
         <a href="{{ route('points') }}">Poin</a> |
         <a href="{{ route('saldo') }}">Saldo</a> |
-        <a href="{{ route('logout') }}">Keluar</a>
+        <a href="{{ route('membership.info') }}">Membership</a> | <a href="{{ route('logout') }}">Keluar</a>
+
     </nav>
     
     <!-- Alert -->
@@ -20,7 +21,8 @@
     <h1>Halo, {{ auth()->user()->name }}</h1>
     
     <h2>Poin: {{ auth()->user()->points }}</h2>
-    <h2>Saldo: Rp {{ number_format($user->saldo, 0, ',', '.') }}</h2>
+    <h2>Saldo: Rp {{ number_format(auth()->user()->saldo, 0, ',', '.') }}</h2>
+    <h2>Membership: {{ auth()->user()->membership->level ?? 'Silver' }}</h2>
     
     <a href="{{ route('vouchers.index') }}" class="btn btn-primary">
         Lihat Daftar Voucher
@@ -34,6 +36,7 @@
         <li><a href="/redeem">Tukar Poin</a></li>
         <li><a href="/vouchers">Voucher Saya</a></li>
         <li><a href="/news">Berita</a></li>
+        <li><a href="{{ route('redeem.history') }}">Voucher Saya</a></li>
     </ul>
 </body>
 </html>

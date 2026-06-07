@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\NewsController;
+use App\Models\Membership;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RedeemController;
 use App\Http\Controllers\ReviewController;
@@ -12,7 +13,6 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Middleware\AdminMiddleware;
-use App\Http\Controllers\FavoriteController;
 
 /*
     Guest Routes (Belum Login)
@@ -54,7 +54,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('carts', CartController::class);
 
     // Memberships
-    // Route::resource('memberships', MembershipController::class);
+    Route::get('/membership/info', [MembershipController::class, 'info'])->name('membership.info');
 
     // News
     Route::resource('news', NewsController::class);
@@ -76,11 +76,6 @@ Route::middleware('auth')->group(function () {
 
     // Vouchers
     Route::resource('vouchers', VoucherController::class);
-
-    // Favorites
-    Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
-    Route::post('/favorites/{product}', [FavoriteController::class, 'store'])->name('favorites.store');
-    Route::delete('/favorites/{product}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
 });
 
 /*

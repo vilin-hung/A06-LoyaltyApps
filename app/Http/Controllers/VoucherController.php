@@ -7,108 +7,114 @@ use Illuminate\Http\Request;
 
 class VoucherController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        $vouchers = Voucher::where('is_active', true)->latest()->get();
+        if (auth()->check() && auth()->user()->role === 'admin') {
+            $vouchers = Voucher::latest()->get();
+        } else {
+            $vouchers = Voucher::where('is_active', true)->latest()->get();
+        }
+        
         return view('vouchers.index', compact('vouchers'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        if (!auth()->user()->is_admin) {
+        if (auth()->user()->role !== 'admin') {
             abort(403);
         }
         return view('vouchers.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        if (!auth()->user()->is_admin) {
-      abort(403);
+        if (auth()->user()->role !== 'admin') {
+            abort(403);
+        }
+
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|unique:vouchers,code|max:50',
+            'deskripsi' => 'nullable|string',
+            'points_yang_dibutuhkan' => 'required|integer|min:0',
+            'tipe_diskon' => 'required|in:percentage,fixed',
+            'nilai_diskon' => 'required|integer|min:0',
+            'kuota' => 'required|integer|min:0',
+            'tanggal_mulai' => 'nullable|date',
+            'tanggal_berakhir' => 'nullable|date|after_or_equal:tanggal_mulai',
+        ]);
+
+        $voucherData = [
+            'name' => $request->name,
+            'code' => $request->code,
+            'description' => $request->deskripsi,
+            'points_required' => $request->points_yang_dibutuhkan,
+            'discount_type' => $request->tipe_diskon,
+            'discount_value' => $request->nilai_diskon,
+            'quota' => $request->kuota,
+            'start_date' => $request->tanggal_mulai,
+            'end_date' => $request->tanggal_berakhir,
+            'is_active' => $request->has('status'),
+        ];
+
+        Voucher::create($voucherData);
+
+        return redirect()->route('vouchers.index')->with('success', 'Voucher berhasil ditambahkan!');
     }
 
-    $validated = $request->validate([
-      'name' => 'required|string|max:255',
-      'code' => 'required|string|unique:vouchers,code|max:50',
-      'description' => 'nullable|string',
-      'points_required' => 'required|integer|min:0',
-      'discount_type' => 'required|in:percentage,fixed',
-      'discount_value' => 'required|integer|min:0',
-      'quota' => 'required|integer|min:0',
-      'start_date' => 'nullable|date',
-      'end_date' => 'nullable|date|after_or_equal:start_date',
-    ]);
-
-    $validated['is_active'] = $request->has('is_active');
-
-    Voucher::create($validated);
-
-    return redirect()->route('vouchers.index')->with('success', 'Voucher berhasil ditambahkan!');
-    }
-
-    /**
-     * Display the specified resource.
-     */
     public function show(Voucher $voucher)
     {
         return view('vouchers.show', compact('voucher'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(Voucher $voucher)
     {
-        if (!auth()->user()->is_admin) {
-        abort(403);
+        if (auth()->user()->role !== 'admin') {
+            abort(403);
         }
         return view('vouchers.edit', compact('voucher'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(Request $request, Voucher $voucher)
     {
-        if (!auth()->user()->is_admin) {
-        abort(403);
+        if (auth()->user()->role !== 'admin') {
+            abort(403);
         }
 
-        $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'code' => 'required|string|max:50|unique:vouchers,code,' . $voucher->id,
-        'description' => 'nullable|string',
-        'points_required' => 'required|integer|min:0',
-        'discount_type' => 'required|in:percentage,fixed',
-        'discount_value' => 'required|integer|min:0',
-        'quota' => 'required|integer|min:0',
-        'start_date' => 'nullable|date',
-        'end_date' => 'nullable|date|after_or_equal:start_date',
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'code' => 'required|string|max:50|unique:vouchers,code,' . $voucher->id,
+            'deskripsi' => 'nullable|string',
+            'points_yang_dibutuhkan' => 'required|integer|min:0',
+            'tipe_diskon' => 'required|in:percentage,fixed',
+            'nilai_diskon' => 'required|integer|min:0',
+            'kuota' => 'required|integer|min:0',
+            'tanggal_mulai' => 'nullable|date',
+            'tanggal_berakhir' => 'nullable|date|after_or_equal:tanggal_mulai',
         ]);
 
-        $validated['is_active'] = $request->has('is_active');
+        $voucherData = [
+            'name' => $request->name,
+            'code' => $request->code,
+            'description' => $request->deskripsi,
+            'points_required' => $request->points_yang_dibutuhkan,
+            'discount_type' => $request->tipe_diskon,
+            'discount_value' => $request->nilai_diskon,
+            'quota' => $request->kuota,
+            'start_date' => $request->tanggal_mulai,
+            'end_date' => $request->tanggal_berakhir,
+            'is_active' => $request->has('status'),
+        ];
 
-        $voucher->update($validated);
+        $voucher->update($voucherData);
 
         return redirect()->route('vouchers.index')->with('success', 'Voucher berhasil diperbarui!');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Voucher $voucher)
     {
-        if (!auth()->user()->is_admin) {
-        abort(403);
+        if (auth()->user()->role !== 'admin') {
+            abort(403);
         }
         $voucher->delete();
         return redirect()->route('vouchers.index')->with('success', 'Voucher berhasil dihapus!');

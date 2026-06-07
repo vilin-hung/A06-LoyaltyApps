@@ -17,25 +17,21 @@
 </head>
 <body>
 
-<!-- Halaman daftar all voucher -->
 <h1>Daftar Voucher</h1>
 <p>
-    <a href="{{ route('home') }}" class="btn">
-        Kembali ke Beranda
-    </a>
-</p>
-
-@if(Auth::check() && auth()->user()->is_admin)
-    <p>
+    @if(Auth::check() && auth()->user()->role === 'admin')
         <a href="{{ route('admin.dashboard') }}" class="btn">
             Kembali ke Dashboard
         </a>
-        <!-- Button 'tambah voucher' hanya untuk admin -->
         &nbsp;&nbsp;<a href="{{ route('vouchers.create') }}" class="btn">
             Tambah Voucher
         </a>
-    </p>
-@endif
+    @else
+        <a href="{{ route('home') }}" class="btn">
+            Kembali ke Beranda
+        </a>
+    @endif
+</p>
 
 @if(session('success'))
     <p style="color: green;"><b>{{ session('success') }}</b></p>
@@ -55,7 +51,6 @@
 
     @foreach($vouchers as $voucher)
     <tr>
-        <!-- Menampilkan detail voucher -->
         <td>{{ $voucher->name }}</td>
         <td>{{ $voucher->code }}</td>
         <td>
@@ -77,24 +72,21 @@
         </td>
         
         <td>
-            <!-- Button detail voucher (bisa diakses semua user) -->
             <a href="{{ route('vouchers.show', $voucher->id) }}" class="btn">
                 Detail Voucher
             </a>
 
-            @if(Auth::check() && !auth()->user()->is_admin)
+            @if(Auth::check() && auth()->user()->role !== 'admin')
                 <form action="{{ route('redeem.store') }}" method="POST" style="display:inline;">
                     @csrf
                     <input type="hidden" name="voucher_id" value="{{ $voucher->id }}">
-                    <!-- Button 'tukar voucher' hanya untuk user -->
                     <button type="submit" class="btn" {{ ($voucher->quota <= 0 || !$voucher->is_active) ? 'disabled' : '' }}>
                         Tukarkan
                     </button>
                 </form> 
             @endif 
             
-            @if(Auth::check() && auth()->user()->is_admin)
-                <!-- Button 'edit voucher' dan 'hapus voucher' hanya untuk admin -->
+            @if(Auth::check() && auth()->user()->role === 'admin')
                 <a href="{{ route('vouchers.edit', $voucher->id) }}" class="btn">
                     Edit
                 </a>
