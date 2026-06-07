@@ -16,6 +16,7 @@
         <li><a href="{{ route('reviews.index') }}">Daftar Review</a></li>
         <li><a href="{{ route('vouchers.index') }}">Daftar Voucher</a></li>
         <li><a href="{{ route('memberships.index') }}">Daftar Membership</a></li>
+        <li><a href="{{ route('news.index') }}">Daftar Berita</a></li>
     </ul>
 </body>
 </html>

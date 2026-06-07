@@ -33,6 +33,7 @@
         <li><a href="/transactions">Riwayat Transaksi</a></li>
         <li><a href="/redeem">Tukar Poin</a></li>
         <li><a href="/vouchers">Voucher Saya</a></li>
+        <li><a href="/news">Berita</a></li>
     </ul>
 </body>
 </html>

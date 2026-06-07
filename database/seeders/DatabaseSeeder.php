@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Voucher;
+use App\Models\News;
 
 class DatabaseSeeder extends Seeder
 {
@@ -63,6 +64,12 @@ class DatabaseSeeder extends Seeder
         \App\Models\Favorite::create([
             'user_id' => $user->id,
             'product_id' => $product->id,
+        ]);
+
+        // News
+        News::create([
+            'title' => 'Jam Buka Kopi Loyalty',
+            'content' => 'Buka jam 7 pagi - 10 malam. Stay tuned!',
         ]);
     }
 }
