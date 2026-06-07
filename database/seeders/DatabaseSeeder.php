@@ -68,7 +68,7 @@ class DatabaseSeeder extends Seeder
 
         // News
         News::create([
-            'title' => 'Jam Buka Kopi Loyalty',
+            'title' => 'Jam Buka Kedai Kopi Kita',
             'content' => 'Buka jam 7 pagi - 10 malam. Stay tuned!',
         ]);
     }
