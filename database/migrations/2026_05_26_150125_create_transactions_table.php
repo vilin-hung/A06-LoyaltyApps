@@ -15,7 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('voucher_id')->nullable()->constrained()->onDelete('set null'); 
-            $table->decimal('total_amount', 10, 2);
+            $table->decimal('subtotal', 12, 2)->default(0);
+            $table->decimal('voucher_discount', 12, 2)->default(0);
+            $table->decimal('membership_discount', 12, 2)->default(0);            $table->decimal('total_amount', 10, 2);
             $table->integer('points_earned')->default(0);
             $table->timestamps();
         });
