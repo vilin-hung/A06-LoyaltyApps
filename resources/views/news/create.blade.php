@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tambah Berita</title>
+    <style>
+        .btn {
+            padding: 5px 10px;
+            text-decoration: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f2f2f2;
+            color: black;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>Tambah Berita</h1>
+    <!-- Form untuk menambahkan berita -->
+    <form method="POST" action="{{ route('news.store') }}">
+        @csrf
+        <p>
+            <label>Judul:</label><br>
+            <input type="text" name="title" required>
+        </p>
+        <p>
+            <label>Konten:</label><br>
+            <textarea name="content" rows="5" required></textarea>
+        </p>
+        <button type="submit" class="btn">Simpan</button>
+    </form>
+</body>
+</html>

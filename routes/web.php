@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\MembershipController;
+use App\Http\Controllers\NewsController;
 use App\Models\Membership;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RedeemController;
@@ -56,6 +57,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/membership/info', [MembershipController::class, 'info'])->name('membership.info');
 
     // News
+    Route::resource('news', NewsController::class);
     
     // Products
     Route::resource('products', ProductController::class);
