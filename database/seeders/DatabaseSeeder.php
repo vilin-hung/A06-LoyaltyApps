@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Voucher;
+use App\Models\Membership;
 
 class DatabaseSeeder extends Seeder
 {
@@ -30,6 +31,15 @@ class DatabaseSeeder extends Seeder
             'password' => Hash::make('upinipin'),
             'role' => 'user',
             'saldo' => 1000000,
+            'points' => 100,
+        ]);
+
+        $user = User::create([
+            'name' => 'barbie',
+            'email' => 'barbie@gmail.com',
+            'password' => Hash::make('barbie28'),
+            'role' => 'user',
+            'saldo' => 500000,
             'points' => 100,
         ]);
         // User::factory()->count(10)->create();
@@ -57,6 +67,34 @@ class DatabaseSeeder extends Seeder
             'total_amount' => 30000.00,
             'points_earned' => 1,
             'created_at' => now(),
+        ]);
+
+        // Favorite
+        \App\Models\Favorite::create([
+            'user_id' => $user->id,
+            'product_id' => $product->id,
+        ]);
+
+        // Membership
+       Membership::create([
+            'level' => 'Silver',
+            'min_transaction' => 0,
+            'discount_percentage' => 0,
+            'point_multiplier' => 1,
+        ]);
+
+        Membership::create([
+            'level' => 'Gold',
+            'min_transaction' => 300000,
+            'discount_percentage' => 5,
+            'point_multiplier' => 0,
+        ]);
+
+        Membership::create([
+            'level' => 'Platinum',
+            'min_transaction' => 800001,
+            'discount_percentage' => 10,
+            'point_multiplier' => 2,
         ]);
     }
 }
