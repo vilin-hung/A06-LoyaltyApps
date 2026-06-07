@@ -71,15 +71,17 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // Favorite
-        \App\Models\Favorite::create([
-            'user_id' => $user->id,
-            'product_id' => $product->id,
-        ]);
+        // \App\Models\Favorite::create([
+        //     'user_id' => $user->id,
+        //     'product_id' => $product->id,
+        // ]);
 
         // News
         News::create([
             'title' => 'Jam Buka Kedai Kopi Kita',
             'content' => 'Buka jam 7 pagi - 10 malam. Stay tuned!',
+        ]);
+
         // Membership
        Membership::create([
             'level' => 'Silver',
@@ -92,7 +94,7 @@ class DatabaseSeeder extends Seeder
             'level' => 'Gold',
             'min_transaction' => 300000,
             'discount_percentage' => 5,
-            'point_multiplier' => 0,
+            'point_multiplier' => 1,
         ]);
 
         Membership::create([
@@ -100,6 +102,33 @@ class DatabaseSeeder extends Seeder
             'min_transaction' => 800001,
             'discount_percentage' => 10,
             'point_multiplier' => 2,
+        ]);
+
+        // Voucher
+        Voucher::create([
+            'name' => 'Untuk Kamu 10 Ribu',
+            'code' => 'HEMAT10K',
+            'description' => 'Potongan langsung Rp 10.000 untuk kamu',
+            'discount_type' => 'fixed',
+            'discount_value' => 10000,
+            'points_required' => 10,
+            'quota' => 50,
+            'start_date' => now(),
+            'end_date' => now()->addDays(30),
+            'is_active' => true,
+        ]);
+
+        Voucher::create([
+            'name' => 'Kopi Mantap untukmu',
+            'code' => 'YangMantap',
+            'description' => 'Potongan harga untuk kamu',
+            'discount_type' => 'percentage',
+            'discount_value' => 10,
+            'points_required' => 25,
+            'quota' => 50,
+            'start_date' => now(),
+            'end_date' => now()->addDays(21),
+            'is_active' => true,
         ]);
     }
 }
