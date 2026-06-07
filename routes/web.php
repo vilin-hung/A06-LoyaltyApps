@@ -12,7 +12,6 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Middleware\AdminMiddleware;
-use App\Http\Controllers\FavoriteController;
 
 /*
     Guest Routes (Belum Login)
@@ -75,11 +74,6 @@ Route::middleware('auth')->group(function () {
 
     // Vouchers
     Route::resource('vouchers', VoucherController::class);
-
-    // Favorites
-    Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
-    Route::post('/favorites/{product}', [FavoriteController::class, 'store'])->name('favorites.store');
-    Route::delete('/favorites/{product}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
 });
 
 /*

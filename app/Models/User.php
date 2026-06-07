@@ -52,11 +52,6 @@ class User extends Authenticatable
         ];
     }
 
-    public function redeems()
-    {
-        return $this->hasMany(Redeem::class);
-    }
-
     public function membership()
     {
         return $this->belongsTo(Membership::class, 'membership_id', 'id');
@@ -65,10 +60,5 @@ class User extends Authenticatable
     public function reviews()
     {
         return $this->hasMany(Review::class);
-    }
-
-    public function favorites()
-    {
-        return $this->hasMany(Favorite::class);
     }
 }
