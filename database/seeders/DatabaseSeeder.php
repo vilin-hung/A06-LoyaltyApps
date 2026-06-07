@@ -1,11 +1,10 @@
 <?php
 
 namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Cart;
 use App\Models\Product;
-use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Voucher;
 use App\Models\News;
@@ -54,22 +53,6 @@ class DatabaseSeeder extends Seeder
             'category' => 'beverages',
         ]);
 
-        // Cart
-        Cart::create([
-            'user_id' => $user->id,
-            'product_id' => $product->id,
-            'quantity' => 2,
-        ]);
-
-        // Transaction
-        Transaction::create([
-            'user_id' => $user->id,
-            'voucher_id' => null,
-            'total_amount' => 30000.00,
-            'points_earned' => 1,
-            'created_at' => now(),
-        ]);
-
         // Favorite
         // \App\Models\Favorite::create([
         //     'user_id' => $user->id,
@@ -104,6 +87,9 @@ class DatabaseSeeder extends Seeder
             'point_multiplier' => 2,
         ]);
 
+        $this->call([
+            CartSeeder::class,
+            TransactionSeeder::class,
         // Voucher
         Voucher::create([
             'name' => 'Untuk Kamu 10 Ribu',

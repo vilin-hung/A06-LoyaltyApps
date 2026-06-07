@@ -7,11 +7,6 @@
 
     <h1>Riwayat Transaksiku</h1>
     
-    <p>
-        <a href="{{ route('carts.index') }}">Kembali ke Keranjang</a> | 
-        <a href="{{ route('products.index') }}">Ke Daftar Produk</a>
-    </p>
-
     @if(session('success'))
         <p style="color: green;"><strong>{{ session('success') }}</strong></p>
     @endif
@@ -44,6 +39,22 @@
             @endforeach
         </tbody>
     </table>
+    
+    <p>
+        <form action="{{ route('carts.index') }}">
+          <button type="submit">Intip Keranjangku</button>
+        </form>
+        <br>
+
+        <form action="{{ route('products.index') }}">
+          <button type="submit">Lihat Daftar Produk</button>
+        </form>
+        <br>
+
+        <form action="{{ route('home') }}">
+          <button type="submit">Kembali ke Beranda</button>
+        </form>
+    </p>
 
 </body>
 </html>

@@ -86,16 +86,18 @@ class CartController extends Controller
      */
     public function store(Request $request)
     {
+        $product = Product::findOrFail($request->product_id);
+
         $request->validate([
             'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1',
+            'quantity' => 'required|integer|min:1|max:' . $product->stock,
+        ],[
+            'quantity.max' => 'Jumlah yang dimasukkan melebihi stok yang tersedia (' . $product->stock . ' pcs).'
         ]);
-
-        $product = Product::findOrFail($request->product_id);
 
         // Jika stock product 0, gagal add to cart
         if ($product->stock <= 0) {
-            return redirect()->back()->with('error', 'Maaf, stok produk kosong!');
+            return redirect()->back()->with('error', 'Maaf, stok produk kosong :(');
         }
 
         $cart = Cart::where('user_id', auth()->id())
@@ -121,7 +123,14 @@ class CartController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Produk ditambahkan ke keranjang.');
+        return redirect()
+            ->back()
+            ->with('success_html', 'Produk ditambahkan ke keranjang.
+            <a href="'
+                . route('carts.index')
+                . '" style="text-decoration: underline; font-weight: bold;">Lihat Keranjang
+            </a>'
+            );
     }
 
     /**
@@ -175,7 +184,7 @@ class CartController extends Controller
         return redirect()->route('carts.index')->with('success', 'Item dihapus dari keranjang.');
     }
 
-    // Checkout: mengubah semua item di cart menjadi transaksi
+    // Checkout: mengubah item pilihan di cart menjadi transaksi
     public function checkout(Request $request)
     {
         // checkbox produk untuk checkout
@@ -208,8 +217,9 @@ class CartController extends Controller
                 ->delete();
 
             return redirect()->route('transactions.success')
-                ->with('success', "Checkout berhasil! Poin")
-                ->with('earnedPoints', $result['points'] ?? 0);
+                ->with('success', "Checkout berhasil!")
+                ->with('earnedPoints', $result['points'] ?? 0)
+                ->with('transaction_id', $result['transaction']->id);
 
         } catch (\Exception $e) {
             return redirect()->route('carts.index')->with('error', $e->getMessage());

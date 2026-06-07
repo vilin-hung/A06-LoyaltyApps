@@ -87,4 +87,7 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     })->name('admin.dashboard');
 
     Route::resource('memberships', MembershipController::class);
+
+    Route::get('/admin/transactions', [App\Http\Controllers\TransactionController::class, 'adminIndex'])
+        ->name('transactions.admin_index');
 });
