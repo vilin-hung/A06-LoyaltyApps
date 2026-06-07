@@ -58,11 +58,5 @@ class DatabaseSeeder extends Seeder
             'points_earned' => 1,
             'created_at' => now(),
         ]);
-
-        // Favorite
-        \App\Models\Favorite::create([
-            'user_id' => $user->id,
-            'product_id' => $product->id,
-        ]);
     }
 }
