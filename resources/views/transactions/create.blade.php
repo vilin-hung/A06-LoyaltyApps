@@ -4,7 +4,7 @@
 </head>
 <body>
 
-<h2>Checkout Pesanan (Order Now)</h2>
+<h2>Checkout Pesanan (Beli Sekarang)</h2>
 
 <form action="{{ route('transactions.store') }}" method="POST">
     @csrf
@@ -36,9 +36,30 @@
     <select name="voucher_id">
         <option value="">-- Tanpa Voucher --</option>
         @foreach($vouchers as $voucher)
-            <option value="{{ $voucher->id }}">{{ $voucher->code }} (Potongan: Rp {{ $voucher->discount_value }})</option>
+            <option value="{{ $voucher->id }}">
+                {{ $voucher->code }}
+                (Potongan: 
+                @if($voucher->type === 'percentage')
+                   {{ $voucher->discount_value }}% 
+                @else
+                    Rp {{ $voucher->discount_value }}
+                @endif
+                )
+            </option>
         @endforeach
     </select>
+
+    <div>
+        <p>Subtotal: <strong>Rp {{ number_format($subtotalChosen ?? 0, 0, ',', '.') }}</strong></p>
+
+        @if(($membershipDiscount ?? 0) > 0)
+            <p>Diskon Membership: <strong>-Rp {{ number_format($membershipDiscount ?? 0, 0, ',', '.') }}</strong></p>
+        @endif
+
+        <p>Diskon Voucher: <strong>-Rp {{ number_format($voucherDiscount ?? 0, 0, ',', '.') }}</strong></p>
+        <br>
+        <h3>Total Akhir: Rp {{ number_format($totalFinal ?? 0, 0, ',', '.') }}</h3>
+    </div> 
 
     <br><br>
     <button type="submit">Buat Pesanan Sekarang</button>

@@ -21,6 +21,10 @@
     <p style="color: red;">{{ session('error') }}</p>
 @endif
 
+@if(session('success_html'))
+    <p style="color: green;">{{!! session('success_html') !!}}</p>
+@endif
+
 @if(session('success'))
     <p style="color: green;">{{ session('success') }}</p>
 @endif

@@ -10,7 +10,7 @@
     <p>Terima kasih telah melakukan pembelian di toko kami.</p>
 
     @if(session('success'))
-      <p><strong>Status:</strong> {{ session('success', 0) }}</p>
+      <p><strong>Status:</strong> {{ session('success') }}</p>
     @endif
 
     <div>
@@ -18,10 +18,20 @@
       <p>+{{ session('earnedPoints', 0) }} Poin</p>
     </div>
 
-    <p style="margin-top: 30px;">
-        <a href="{{ route('products.index') }}">Belanja Lagi</a>
-        <br>
-        <a href="{{ route('transactions.index') }}">Lihat Riwayat Transaksi</a>
+    <p>     
+      <form action="{{ route('products.index') }}">
+        <button type="submit">Belanja Lagi 🤑</button>
+      </form>
+      <br>
+      
+      <form action="{{ route('transactions.index') }}">
+        <button type="submit">Lihat Riwayat Transaksi</button>
+      </form>
+      <br>
+
+      <form action="{{ route('home') }}">
+        <button type="submit">Kembali ke Beranda</button>
+      </form>
     </p>
   </div>
 
