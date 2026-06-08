@@ -20,39 +20,39 @@
     <input type="text" name="code" value="{{ $voucher->code }}" required><br><br>
 
     <!-- Input deskripsi voucher -->
-    <label>Description:</label><br>
-    <textarea name="description">{{ $voucher->description }}</textarea><br><br>
+    <label>Deskripsi:</label><br>
+    <textarea name="deskripsi">{{ $voucher->description }}</textarea><br><br>
 
     <!-- Input tipe diskon -->
-    <label>Discount Type:</label><br>
-    <select name="discount_type" required>
-        <option value="fixed" {{ $voucher->discount_type == 'fixed' ? 'selected' : '' }}>Nominal Tetap (Rp)</option>
-        <option value="percentage" {{ $voucher->discount_type == 'percentage' ? 'selected' : '' }}>Persentase (%)</option>
+    <label>Tipe Diskon:</label><br>
+    <select name="tipe_diskon" required>
+        <option value="fixed" {{ $voucher->tipe_diskon == 'fixed' ? 'selected' : '' }}>Nominal Tetap (Rp)</option>
+        <option value="percentage" {{ $voucher->tipe_diskon == 'percentage' ? 'selected' : '' }}>Persentase (%)</option>
     </select><br><br>
 
     <!-- Input nilai diskon -->
-    <label>Discount Value:</label><br>
-    <input type="number" name="discount_value" value="{{ $voucher->discount_value }}" min="0" required><br><br>
+    <label>Nilai Diskon:</label><br>
+    <input type="number" name="nilai_diskon" value="{{ $voucher->discount_value }}" min="0" required><br><br>
 
     <!-- Input poin yang dibutuhkan -->
-    <label>Points Required:</label><br>
-    <input type="number" name="points_required" value="{{ $voucher->points_required }}" min="0" required><br><br>
+    <label>Poin yang Dibutuhkan:</label><br>
+    <input type="number" name="points_yang_dibutuhkan" value="{{ $voucher->points_required }}" min="0" required><br><br>
 
     <!-- Input kuota voucher -->
-    <label>Quota:</label><br>
-    <input type="number" name="quota" value="{{ $voucher->quota }}" min="0" required><br><br>
+    <label>Kuota:</label><br>
+    <input type="number" name="kuota" value="{{ $voucher->quota }}" min="0" required><br><br>
 
     <!-- Input tanggal mulai berlaku voucher -->
-    <label>Start Date:</label><br>
-    <input type="datetime-local" name="start_date" value="{{ $voucher->start_date ? date('Y-m-d\TH:i', strtotime($voucher->start_date)) : '' }}"><br><br>
+    <label>Tanggal Mulai:</label><br>
+    <input type="datetime-local" name="tanggal_mulai" value="{{ $voucher->start_date ? date('Y-m-d\TH:i', strtotime($voucher->start_date)) : '' }}"><br><br>
 
     <!-- Input tanggal masa berakhir voucher -->
-    <label>End Date:</label><br>
-    <input type="datetime-local" name="end_date" value="{{ $voucher->end_date ? date('Y-m-d\TH:i', strtotime($voucher->end_date)) : '' }}"><br><br>
+    <label>Tanggal Berakhir:</label><br>
+    <input type="datetime-local" name="tanggal_berakhir" value="{{ $voucher->end_date ? date('Y-m-d\TH:i', strtotime($voucher->end_date)) : '' }}"><br><br>
 
     <!-- Input status voucher -->
-    <label>Is Active:</label><br>
-    <input type="checkbox" name="is_active" {{ $voucher->is_active ? 'checked' : '' }}> Voucher Aktif<br><br>
+    <label>Status:</label><br>
+    <input type="checkbox" name="status" {{ $voucher->is_active ? 'checked' : '' }}> Voucher Aktif<br><br>
 
     <button type="submit">
         Update

@@ -1,35 +1,40 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tukar Voucher</title>
+</head>
+<body>
 
-@section('content')
-<div class="container">
-    <h1>Redeem Voucher</h1>
+<h1>Tukar Voucher</h1>
 
-    <form action="{{ route('redeem.store') }}" method="POST">
-        @csrf
+@if(session('error'))
+    <p>{{ session('error') }}</p>
+@endif
 
-        <div class="mb-3">
-            <label>Voucher</label>
+<form action="{{ route('redeems.store') }}" method="POST">
+    @csrf
 
-            <select name="voucher_id" class="form-control">
-                @foreach($vouchers as $voucher)
-                    <option value="{{ $voucher->id }}">
-                        {{ $voucher->name }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
+    <label>Voucher</label>
+    <select name="voucher_id">
+        @foreach($vouchers as $voucher)
+            <option value="{{ $voucher->id }}">
+                {{ $voucher->name }} (Kuota: {{ $voucher->quota }})
+            </option>
+        @endforeach
+    </select>
 
-        <div class="mb-3">
-            <label>Points Spent</label>
+    <br><br>
 
-            <input type="number"
-                   name="points_spent"
-                   class="form-control">
-        </div>
+    <button type="submit">
+        Tukarkan
+    </button>
+</form>
 
-        <button type="submit" class="btn btn-primary">
-            Redeem
-        </button>
-    </form>
-</div>
-@endsection
+<br>
+
+<a href="{{ route('redeems.index') }}">
+    Lihat Riwayat Redeem
+</a>
+
+</body>
+</html>

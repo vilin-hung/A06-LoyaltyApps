@@ -17,11 +17,20 @@ class MembershipController extends Controller
     }
 
     /**
+     * Menampilkan halaman info membership untuk user
+     */
+    public function info()
+    {
+        $memberships = Membership::orderBy('min_transaction', 'asc')->get();
+        return view('memberships.info', compact('memberships'));
+    }
+
+    /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        if (!auth()->user()->is_admin) {
+        if (auth()->user()->role !== 'admin') {
             abort(403);
         }
 
@@ -33,12 +42,12 @@ class MembershipController extends Controller
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->is_admin) {
+        if (auth()->user()->role !== 'admin') {
             abort(403);
         }
 
         $validated = $request->validate([
-            'level' => 'required|string|max:255',
+            'level' => 'required|string|max:255|unique:memberships,level,' . $membership->id,
             'min_transaction' => 'required|integer|min:0',
             'point_multiplier' => 'required|integer|min:1',
             'discount_percentage' => 'required|integer|min:0|max:100',
@@ -62,7 +71,7 @@ class MembershipController extends Controller
      */
     public function edit(Membership $membership)
     {
-        if (!auth()->user()->is_admin) {
+        if (auth()->user()->role !== 'admin') {
             abort(403);
         }
 
@@ -74,7 +83,7 @@ class MembershipController extends Controller
      */
     public function update(Request $request, Membership $membership)
     {
-        if (!auth()->user()->is_admin) {
+        if (auth()->user()->role !== 'admin') {
             abort(403);
         }
 
@@ -95,7 +104,7 @@ class MembershipController extends Controller
      */
     public function destroy(Membership $membership)
     {
-        if (!auth()->user()->is_admin) {
+        if (auth()->user()->role !== 'admin') {
             abort(403);
         }
         

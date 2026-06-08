@@ -17,16 +17,15 @@
 </head>
 <body>
 
-<!-- Halaman daftar all tier membership -->
+<!-- Halaman daftar all memberships -->
 <h1>Daftar Tier Membership</h1>
 
 <p>
     <a href="{{ route('admin.dashboard') }}" class="btn">
         Kembali ke Dashboard
     </a>
-    
-    @if(Auth::check() && auth()->user()->is_admin)
-        <!-- Button 'tambah tier membership' hanya untuk admin -->
+    <!-- Button 'tambah tier membership' hanya untuk admin -->
+    @if(Auth::check() && auth()->user()->role === 'admin')
         &nbsp;&nbsp;<a href="{{ route('memberships.create') }}" class="btn">
             Tambah Tier Membership
         </a>
@@ -38,12 +37,12 @@
 @endif
 <br>
 
-<table border="1" cellpadding="10">
+<table border="1" cellpadding="10" style="border-collapse: collapse;">
     <tr>
         <th>Level</th>
         <th>Min. Transaksi</th>
         <th>Pengganda Poin</th>
-        <th>Diskon Otomatis</th>
+        <th>Diskon</th>
         <th>Aksi</th>
     </tr>
 
@@ -55,13 +54,11 @@
         <td>{{ $membership->discount_percentage }}%</td>
         
         <td>
-            <!-- Button detail membership (bisa diakses semua user) -->
             <a href="{{ route('memberships.show', $membership->id) }}" class="btn">
                 Detail Membership
             </a>
-            
-            <!-- Button edit dan delete membership (admin only) -->
-            @if(Auth::check() && auth()->user()->is_admin)
+            <!-- Button edit dan delete hanya untuk admin -->
+            @if(Auth::check() && auth()->user()->role === 'admin')
                 <a href="{{ route('memberships.edit', $membership->id) }}" class="btn">
                     Edit
                 </a>
