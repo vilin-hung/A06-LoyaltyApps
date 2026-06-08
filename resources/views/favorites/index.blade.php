@@ -1,46 +1,52 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Produk Favorit</title>
+</head>
+<body>
 
-@section('content')
-<div class="container">
-    <h1>My Favorites</h1>
+<h1>Produk Favorit Saya</h1>
 
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
-        </div>
-    @endif
+@if(session('success'))
+    <p style="color:green;">
+        {{ session('success') }}
+    </p>
+@endif
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Product</th>
-                <th>Action</th>
-            </tr>
-        </thead>
+<table border="1" cellpadding="10">
+    <tr>
+        <th>Produk</th>
+        <th>Aksi</th>
+    </tr>
 
-        <tbody>
-            @forelse($favorites as $favorite)
-                <tr>
-                    <td>{{ $favorite->product->name }}</td>
-                    <td>
-                        <form action="{{ route('favorites.destroy', $favorite->product->id) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
+    @forelse($favorites as $favorite)
+        <tr>
+            <td>{{ $favorite->product->name }}</td>
+            <td>
+                <form action="{{ route('favorites.destroy', $favorite->product->id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
 
-                            <button class="btn btn-danger">
-                                Remove
-                            </button>
-                        </form>
-                    </td>
-                </tr>
-            @empty
-                <tr>
-                    <td colspan="2">
-                        Belum ada produk favorit
-                    </td>
-                </tr>
-            @endforelse
-        </tbody>
-    </table>
-</div>
-@endsection
+                    <button type="submit">
+                        Hapus
+                    </button>
+                </form>
+            </td>
+        </tr>
+    @empty
+        <tr>
+            <td colspan="2">
+                Belum ada produk favorit
+            </td>
+        </tr>
+    @endforelse
+</table>
+
+<br>
+
+<a href="{{ route('products.index') }}">
+    Kembali ke Produk
+</a>
+
+</body>
+</html>

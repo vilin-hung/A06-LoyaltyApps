@@ -90,8 +90,9 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CartSeeder::class,
             TransactionSeeder::class,
+            FavoriteSeeder::class,
         ]);
-        
+
         // Voucher
         Voucher::create([
             'name' => 'Untuk Kamu 10 Ribu',
