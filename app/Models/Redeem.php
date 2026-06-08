@@ -9,7 +9,7 @@ class Redeem extends Model
     protected $fillable = [
         'user_id',
         'voucher_id',
-        'points_spent'
+        'points_spent',
     ];
 
     public function user()

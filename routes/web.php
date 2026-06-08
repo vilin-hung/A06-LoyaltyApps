@@ -61,9 +61,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('products', ProductController::class);
 
     // Redeem Points
-    Route::get('/redeem', [RedeemController::class, 'create'])->name('redeem.create');
-    Route::post('/redeem', [RedeemController::class, 'store'])->name('redeem.store');
-    Route::get('/redeem/history', [RedeemController::class, 'history'])->name('redeem.history');
+    Route::resource('redeems', RedeemController::class);
     
     // Reviews
     Route::resource('reviews', ReviewController::class);
