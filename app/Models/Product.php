@@ -7,15 +7,20 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $fillable = [
-    'name',
-    'description',
-    'price',
-    'stock',
-    'category'
+        'name',
+        'description',
+        'price',
+        'stock',
+        'category'
     ];
 
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(Favorite::class);
     }
 }
