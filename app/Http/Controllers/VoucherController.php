@@ -43,7 +43,7 @@ class VoucherController extends Controller
             'tanggal_mulai' => 'nullable|date',
             'tanggal_berakhir' => 'nullable|date|after_or_equal:tanggal_mulai',
         ], [
-            'code.unique' => 'Kode sudah ada, silahkan gunakaan kode lain',
+            'code.unique' => 'Kode sudah ada, silahkan gunakan kode lain',
             'name.unique' => 'Nama voucher sudah ada, silahkan gunakan nama lain',
         ]);
 
