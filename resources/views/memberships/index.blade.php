@@ -60,14 +60,14 @@
             <!-- Button edit dan delete hanya untuk admin -->
             @if(Auth::check() && auth()->user()->role === 'admin')
                 <a href="{{ route('memberships.edit', $membership->id) }}" class="btn">
-                    Edit
+                    Ubah
                 </a>
                 <form action="{{ route('memberships.destroy', $membership->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
 
                     <button type="submit" class="btn" onclick="return confirm('Hapus tier ini?')">
-                        Delete
+                        Hapus
                     </button>
                 </form>
             @endif

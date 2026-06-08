@@ -12,10 +12,22 @@
     <!-- Input nama voucher -->
     <label>Nama Voucher:</label><br>
     <input type="text" name="name" value="{{ old('name') }}" required><br><br>
+    @error('name')
+        <div style="color: red; font-size: 14px; margin-top: 5px;">
+            ⚠ {{ $message }}
+        </div>
+    @enderror
+    <br>
 
     <!-- Input kode voucher -->
     <label>Kode Voucher:</label><br>
-    <input type="text" name="code" value="{{ old('code') }}" required><br><br>
+    <input type="text" name="code" value="{{ old('code', $voucher->code ?? '') }}" required><br>
+    @error('code')
+        <div style="color: red; font-size: 14px; margin-top: 5px;">
+            ⚠ {{ $message }}
+        </div>
+    @enderror
+    <br>
 
     <!-- Input deskripsi voucher -->
     <label>Deskripsi:</label><br>
@@ -41,7 +53,7 @@
 
     <!-- Input poin yang dibutuhkan -->
     <label>Points yang Dibutuhkan:</label><br>
-    <input type="number" name="points_yang_dibutuhkan" min="0" required><br><br>
+    <input type="number" name="points_yang_dibutuhkan" min="0" max="25" required><br><br>
 
     <!-- Input kuota voucher -->
     <label>Kuota:</label><br>

@@ -88,14 +88,14 @@
             
             @if(Auth::check() && auth()->user()->role === 'admin')
                 <a href="{{ route('vouchers.edit', $voucher->id) }}" class="btn">
-                    Edit
+                    Ubah
                 </a>
                 <form action="{{ route('vouchers.destroy', $voucher->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
 
                     <button type="submit" class="btn" onclick="return confirm('Hapus voucher ini?')">
-                        Delete
+                        Hapus
                     </button>
                 </form>
             @endif

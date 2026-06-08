@@ -33,15 +33,18 @@ class VoucherController extends Controller
         }
 
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|unique:vouchers,name|max:255',
             'code' => 'required|string|unique:vouchers,code|max:50',
             'deskripsi' => 'nullable|string',
-            'points_yang_dibutuhkan' => 'required|integer|min:0',
+            'points_yang_dibutuhkan' => 'required|integer|min:0|max:25',
             'tipe_diskon' => 'required|in:percentage,fixed',
             'nilai_diskon' => 'required|integer|min:0',
             'kuota' => 'required|integer|min:0',
             'tanggal_mulai' => 'nullable|date',
             'tanggal_berakhir' => 'nullable|date|after_or_equal:tanggal_mulai',
+        ], [
+            'code.unique' => 'Kode sudah ada, silahkan gunakaan kode lain',
+            'name.unique' => 'Nama voucher sudah ada, silahkan gunakan nama lain',
         ]);
 
         $voucherData = [
@@ -82,15 +85,18 @@ class VoucherController extends Controller
         }
 
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'required|string|max:255|unique:vouchers,name,' . $voucher->id,
             'code' => 'required|string|max:50|unique:vouchers,code,' . $voucher->id,
             'deskripsi' => 'nullable|string',
-            'points_yang_dibutuhkan' => 'required|integer|min:0',
+            'points_yang_dibutuhkan' => 'required|integer|min:0|max:25',
             'tipe_diskon' => 'required|in:percentage,fixed',
             'nilai_diskon' => 'required|integer|min:0',
             'kuota' => 'required|integer|min:0',
             'tanggal_mulai' => 'nullable|date',
             'tanggal_berakhir' => 'nullable|date|after_or_equal:tanggal_mulai',
+        ],[
+            'code.unique' => 'Kode sudah ada, silahkan gunakan kode lain',
+            'name.unique' => 'Nama voucher sudah ada, silahkan gunakan nama lain',
         ]);
 
         $voucherData = [

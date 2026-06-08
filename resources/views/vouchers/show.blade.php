@@ -23,9 +23,9 @@
     @endif
 </p>
 
-<p>Points Required: {{ $voucher->points_required }}</p>
-<p>Quota: {{ $voucher->quota }}</p>
-<p>Description: {{ $voucher->description ?? 'Tidak ada deskripsi.' }}</p>
+<p>Point yang Dibutuhkan: {{ $voucher->points_required }}</p>
+<p>Kuota: {{ $voucher->quota }}</p>
+<p>Deskripsi: {{ $voucher->description ?? 'Tidak ada deskripsi.' }}</p>
 
 <p>Masa Aktif: 
     {{ $voucher->start_date ? \Carbon\Carbon::parse($voucher->start_date)->format('d M Y') : '-' }} 

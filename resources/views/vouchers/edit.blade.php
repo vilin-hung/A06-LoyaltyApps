@@ -36,7 +36,7 @@
 
     <!-- Input poin yang dibutuhkan -->
     <label>Poin yang Dibutuhkan:</label><br>
-    <input type="number" name="points_yang_dibutuhkan" value="{{ $voucher->points_required }}" min="0" required><br><br>
+    <input type="number" name="points_yang_dibutuhkan" value="{{ $voucher->points_required }}" min="0" max="25" required><br><br>
 
     <!-- Input kuota voucher -->
     <label>Kuota:</label><br>
