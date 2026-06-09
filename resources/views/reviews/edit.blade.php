@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Edit Review</title>
+    <title>Edit Ulasan</title>
 </head>
 <body>
 
 <!-- Halaman form untuk mengedit review -->
-<h1>Edit Review</h1>
+<h1>Edit Ulasan</h1>
 
 <!-- Form update review -->
 <form action="{{ route('reviews.update', $review->id) }}" method="POST">
@@ -18,12 +18,12 @@
     <br><br>
 
     <!-- Input comment review -->
-    <label>Comment</label>
+    <label>Komentar</label>
     <textarea name="comment" required>{{ $review->comment }}</textarea>
     <br><br>
 
     <button type="submit">
-        Update
+        Perbarui
     </button>
 
 </form>

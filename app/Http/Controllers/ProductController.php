@@ -22,9 +22,9 @@ class ProductController extends Controller implements HasMiddleware
     public function index()
     {
         // Mengambil seluruh data product dari database
-        $products = Product::all();
+        $productsByCategory = Product::all()->groupBy('category');
         // Mengirim data ke view index product
-        return view('products.index', compact('products'));
+        return view('products.index', compact('productsByCategory'));
     }
 
     /**
