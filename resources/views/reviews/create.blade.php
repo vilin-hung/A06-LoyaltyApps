@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Create Review</title>
+    <title>Tambah Ulasan</title>
 </head>
 <body>
 
 <!-- Halaman untuk menambahkan review baru -->
-<h1>Tambah Review</h1>
+<h1>Tambah Ulasan</h1>
 <!-- Menampilkan nama product yang akan diberi review -->
-<p>Product:<strong>{{ $product->name }}</strong></p>
+<p>Produk: <strong>{{ $product->name }}</strong></p>
 
 <!-- Form untuk menyimpan review -->
 <form action="{{ route('reviews.store') }}" method="POST">
@@ -29,13 +29,13 @@
     <br><br>
 
     <!-- Input comment review -->
-    <label>Comment</label>
+    <label>Komentar</label>
     <br>
     <textarea name="comment" required></textarea>
     <br><br>
 
     <button type="submit">
-        Save
+        Simpan
     </button>
 
 </form>
