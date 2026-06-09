@@ -25,7 +25,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // User 
-        $user = User::create([
+        User::create([
             'name' => 'Ipin',
             'email' => 'ipin@gmail.com',
             'password' => Hash::make('upinipin'),
@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
             'points' => 100,
         ]);
 
-        $user = User::create([
+        User::create([
             'name' => 'barbie',
             'email' => 'barbie@gmail.com',
             'password' => Hash::make('barbie28'),
@@ -43,21 +43,6 @@ class DatabaseSeeder extends Seeder
             'points' => 100,
         ]);
         // User::factory()->count(10)->create();
-
-        // Product
-       $product = Product::create([
-            'name' => 'Kopi tes aja',
-            'description' => 'enak banget si, rugi ga dicoba',
-            'price' => '15000',
-            'stock' => '40',
-            'category' => 'beverages',
-        ]);
-
-        // Favorite
-        // \App\Models\Favorite::create([
-        //     'user_id' => $user->id,
-        //     'product_id' => $product->id,
-        // ]);
 
         // News
         News::create([
@@ -70,6 +55,7 @@ class DatabaseSeeder extends Seeder
             MembershipSeeder::class,
             TransactionSeeder::class,
             VoucherSeeder::class,
+            ProductSeeder::class,
         ]);
     }
 }

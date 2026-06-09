@@ -29,9 +29,11 @@
     <!-- Dropdown kategori product -->
     <label>Kategori:</label><br>
     <select name="category" required>
-        <option value="">-- Pilih Category --</option>
-        <option value="minuman" {{ old('category') == 'minuman' ? 'selected' : '' }}>minuman</option>
-        <option value="makanan" {{ old('category') == 'makanan' ? 'selected' : '' }}>makanan</option>
+        <option value="">-- Pilih Kategori --</option>
+        <option value="Coffee" {{ old('category') == 'Coffee' ? 'selected' : '' }}>Coffee</option>
+        <option value="Tea Blend" {{ old('category') == 'Tea Blend' ? 'selected' : '' }}>Tea Blend</option>
+        <option value="Milk Tea" {{ old('category') == 'Milk Tea' ? 'selected' : '' }}>Milk Tea</option>
+        <option value="Chocolate" {{ old('category') == 'Chocolate' ? 'selected' : '' }}>Chocolate</option>
     </select>
 
     @error('category')
