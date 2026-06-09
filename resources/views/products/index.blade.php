@@ -40,51 +40,55 @@
 @endif
 <br>
 
-<table border="1" cellpadding="10">
-    <tr>
-        <th>Nama</th>
-        <th>Harga</th>
-        <th>Status</th>
-        <th>Aksi</th>
-    </tr>
+@foreach($productsByCategory as $category => $categoryProducts)
+    <h2>{{ $category }}</h2>
+    <table border="1" cellpadding="10">
+        <tr>
+            <th>Nama</th>
+            <th>Harga</th>
+            <th>Status</th>
+            <th>Aksi</th>
+        </tr>
 
-    @foreach($products as $product)
-    <tr>
-        <!-- Menampilkan nama product -->
-        <td>{{ $product->name }}</td>
-        <td>Rp {{ number_format($product->price, 2, ',', '.') }}</td>
-        <!-- Status stok product -->
-        <td>
-            @if($product->stock > 0)
-                Tersedia
-            @else
-                Kosong
-            @endif
-        </td>
-        <td>
-            <!-- Button detail product (bisa diakses semua user) -->
-            <a href="{{ route('products.show', $product->id) }}" class="btn">
-                Detail
-            </a>
-            
-            <!-- Button edit dan delete product (admin only) -->
-            @if(Auth::check() && Auth::user()->role == 'admin')
-                <a href="{{ route('products.edit', $product->id) }}" class="btn">
-                    Ubah
+        @foreach($categoryProducts as $product)
+        <tr>
+            <!-- Menampilkan nama product -->
+            <td>{{ $product->name }}</td>
+            <td>Rp {{ number_format($product->price, 2, ',', '.') }}</td>
+            <!-- Status stok product -->
+            <td>
+                @if($product->stock > 0)
+                    Tersedia
+                @else
+                    Kosong
+                @endif
+            </td>
+            <td>
+                <!-- Button detail product (bisa diakses semua user) -->
+                <a href="{{ route('products.show', $product->id) }}" class="btn">
+                    Detail
                 </a>
-                <!-- Form delete product -->
-                <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
-                    @csrf
-                    @method('DELETE')
+                
+                <!-- Button edit dan delete product (admin only) -->
+                @if(Auth::check() && Auth::user()->role == 'admin')
+                    <a href="{{ route('products.edit', $product->id) }}" class="btn">
+                        Ubah
+                    </a>
+                    <!-- Form delete product -->
+                    <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
+                        @csrf
+                        @method('DELETE')
 
-                    <button type="submit" class="btn" onclick="return confirm('Hapus product ini?')">
-                        Hapus
-                    </button>
-                </form>
-            @endif
-        </td>
-    </tr>
-    @endforeach
-</table>
+                        <button type="submit" class="btn" onclick="return confirm('Hapus product ini?')">
+                            Hapus
+                        </button>
+                    </form>
+                @endif
+            </td>
+        </tr>
+        @endforeach
+    </table>
+<br><br>
+@endforeach
 </body>
 </html>
