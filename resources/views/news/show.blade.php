@@ -17,14 +17,13 @@
 </head>
 <body>
     <h1>Detail Berita</h1>
-    <p>
-        <a href="{{ route('news.index') }}" class="btn">Kembali</a>
-    </p>
     <!-- Untuk menampilkan konten secara detail -->
     <fieldset>
         <legend>{{ $news->title }}</legend>
         <p>{{ $news->content }}</p>
         <small>Tanggal: {{ $news->created_at }}</small>
     </fieldset>
+    <br>
+    <a href="{{ route('news.index') }}">Kembali ke Daftar Berita</a>
 </body>
 </html>
