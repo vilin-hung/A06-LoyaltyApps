@@ -36,7 +36,6 @@
         <li><a href="/redeem">Tukar Poin</a></li>
         <li><a href="/vouchers">Voucher Saya</a></li>
         <li><a href="/news">Berita</a></li>
-        <li><a href="{{ route('redeem.history') }}">Voucher Saya</a></li>
     </ul>
 </body>
 </html>

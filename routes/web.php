@@ -5,7 +5,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\MembershipController;
 use App\Http\Controllers\NewsController;
-use App\Models\Membership;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\RedeemController;
 use App\Http\Controllers\ReviewController;
@@ -88,4 +87,7 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     })->name('admin.dashboard');
 
     Route::resource('memberships', MembershipController::class);
+
+    Route::get('/admin/transactions', [App\Http\Controllers\TransactionController::class, 'adminIndex'])
+        ->name('transactions.admin_index');
 });

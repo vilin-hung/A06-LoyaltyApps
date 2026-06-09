@@ -13,7 +13,14 @@
 
         <p>
             <label for="quantity">Jumlah Baru:</label><br>
-            <input type="number" name="quantity" id="quantity" value="{{ $cart->quantity }}" min="1" required>
+            <input
+                type="number"
+                name="quantity"
+                id="quantity"
+                value="{{ $cart->quantity }}"
+                min="1" required
+                max="{{ $product->stock }}"
+            >
         </p>
 
         <p>

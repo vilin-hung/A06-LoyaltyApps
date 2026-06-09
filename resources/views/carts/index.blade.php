@@ -4,6 +4,10 @@
 <body>
 
 <div>
+  <button type="submit" formaction="{{ route('home') }}">
+    Kembali ke Beranda
+  </button>
+
   <h2>Keranjang Belanja</h2>
 
   @if(session('error'))
@@ -32,25 +36,46 @@
             <th>Aksi</th>
           </tr>
         </thead>
+
         <tbody>
           @foreach($cartItems as $item)
             <tr>
               <td>
-                <input type="checkbox" name="cart_ids[]" value="{{ $item->id }}"
+                <input type="checkbox"name="cart_ids[]" value="{{ $item->id }}"
                 {{ isset($checkedIds) && in_array($item->id, $checkedIds) ? 'checked' : '' }}>
               </td>
+
               <td>
                 <strong>{{ $item->product->name }}</strong><br>
                 <small>Stok: {{ $item->product->stock }}</small>
               </td>
-              <td>Rp {{ number_format($item->product->price, 0, ',', '.') }}</td>
+
+              <td>
+                Rp {{ number_format($item->product->price, 0, ',', '.') }}
+              </td>
+              
               <td>
                 {{ $item->quantity }}
               </td>
-              <td>Rp {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}</td>
+
               <td>
-                <a href="{{ route('carts.edit', $item->id) }}">[Edit]</a>
+                Rp {{ number_format($item->product->price * $item->quantity, 0, ',', '.') }}
               </td>
+
+              <td>
+                <form action="{{ route('carts.edit', $item->id) }}">
+                  <button type="submit">Ubah</button>
+                </form>
+
+                <form action="{{ route('carts.destroy', $item->id) }}" 
+                  method="POST"
+                  onsubmit="return confirm('Yakin ingin menghapus item ini dari keranjang?');">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit">Hapus</button>
+                </form>
+              </td>
+              
             </tr>
           @endforeach
         </tbody>

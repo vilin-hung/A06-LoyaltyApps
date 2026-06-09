@@ -1,11 +1,10 @@
 <?php
 
 namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\Cart;
 use App\Models\Product;
-use App\Models\Transaction;
 use App\Models\User;
 use App\Models\Voucher;
 use App\Models\News;
@@ -54,52 +53,23 @@ class DatabaseSeeder extends Seeder
             'category' => 'beverages',
         ]);
 
-        // Cart
-        Cart::create([
-            'user_id' => $user->id,
-            'product_id' => $product->id,
-            'quantity' => 2,
-        ]);
-
-        // Transaction
-        Transaction::create([
-            'user_id' => $user->id,
-            'voucher_id' => null,
-            'total_amount' => 30000.00,
-            'points_earned' => 1,
-            'created_at' => now(),
-        ]);
-
         // Favorite
-        \App\Models\Favorite::create([
-            'user_id' => $user->id,
-            'product_id' => $product->id,
-        ]);
+        // \App\Models\Favorite::create([
+        //     'user_id' => $user->id,
+        //     'product_id' => $product->id,
+        // ]);
 
         // News
         News::create([
             'title' => 'Jam Buka Kedai Kopi Kita',
             'content' => 'Buka jam 7 pagi - 10 malam. Stay tuned!',
-        // Membership
-       Membership::create([
-            'level' => 'Silver',
-            'min_transaction' => 0,
-            'discount_percentage' => 0,
-            'point_multiplier' => 1,
         ]);
 
-        Membership::create([
-            'level' => 'Gold',
-            'min_transaction' => 300000,
-            'discount_percentage' => 5,
-            'point_multiplier' => 0,
-        ]);
-
-        Membership::create([
-            'level' => 'Platinum',
-            'min_transaction' => 800001,
-            'discount_percentage' => 10,
-            'point_multiplier' => 2,
+        $this->call([
+            CartSeeder::class,
+            MembershipSeeder::class,
+            TransactionSeeder::class,
+            VoucherSeeder::class,
         ]);
     }
 }

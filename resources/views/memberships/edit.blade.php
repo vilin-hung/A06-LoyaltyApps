@@ -38,7 +38,7 @@
     <br>
 
     <!-- Input diskon otomatis -->
-    <label>Diskon Otomatis (%):</label><br>
+    <label>Diskon (%):</label><br>
     <input type="number" name="discount_percentage" value="{{ old('discount_percentage', $membership->discount_percentage) }}" min="0" max="100" required><br>
     @error('discount_percentage')
         <div style="color:red">{{ $message }}</div>

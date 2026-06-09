@@ -14,51 +14,62 @@ class TransactionService
 {
   public static function processOrder($userId, $items, $voucherId = null)
   {
-    $user = \App\Models\User::findOrFail($userId);
-    $subtotal = 0;
-    $itemsData = [];
-
-    // subtotal (harga produk bersih sebelum diskon)
-    foreach ($items as $item) {
-      $product = Product::findOrFail($item['product_id']);
-      if ($product->stock < $item['quantity']) {
-        throw new \Exception("Stok {$product->name} tidak cukup");
-      }
-      $itemSubtotal = $product->price * $item['quantity'];
-      $subtotal += $itemSubtotal;
-      $itemsData[] = [
-        'product' => $product,
-        'quantity' => $item['quantity'],
-        'price' => $product->price,
-      ];
-    }
-
-    // cek benefit dari tier
-    $currentMembership = self::getUserTier($user->total_spent);
-    $membershipDiscount = $subtotal * ($currentMembership->discount_percentage / 100);
-    $totalAfterMembership = $subtotal - $membershipDiscount;
-
-    // cek potongan voucher
-    $voucherDiscount = 0;
-    if ($voucherId) {
-      $voucher = Voucher::findOrFail($voucherId);
-      $voucherDiscount = $voucher->discount_amount ?? 0;
-    }
-
-    // grand total
-    $finalAmount = $totalAfterMembership - $voucherDiscount;
-    if ($finalAmount < 0) $finalAmount = 0; 
-
-    // Cek saldo user
-    if ($user->saldo < $finalAmount) {
-      throw new \Exception('Saldo Anda tidak cukup untuk melakukan transaksi');
-    }
-
-    // Hitung poin berdasarkan tier
-    $pointsEarned = floor($finalAmount / 30000) * $currentMembership->point_multiplier;
-
     DB::beginTransaction();
     try {
+      $user = User::lockForUpdate()->findOrFail($userId);
+      $subtotal = 0;
+      $itemsData = [];
+
+      // subtotal (harga produk bersih sebelum diskon)
+      foreach ($items as $item) {
+        $product = Product::lockForUpdate()->findOrFail($item['product_id']);
+
+        if ($product->stock < $item['quantity']) {
+          throw new \Exception("Stok {$product->name} tidak cukup");
+        }
+
+        $itemSubtotal = $product->price * $item['quantity'];
+        $subtotal += $itemSubtotal;
+
+        $itemsData[] = [
+          'product' => $product,
+          'quantity' => $item['quantity'],
+          'price' => $product->price,
+        ];
+      }
+
+      // cek benefit dari tier
+      $currentMembership = self::getUserTier($user->total_spent);
+      $membershipDiscount = $subtotal * ($currentMembership->discount_percentage / 100);
+      $totalAfterMembership = $subtotal - $membershipDiscount;
+
+      // cek potongan voucher
+      $voucherDiscount = 0;
+      if ($voucherId) {
+        $voucher = Voucher::where('id', $voucherId)
+          ->where('user_id', $userId)
+          ->where('status', 'redeemed')
+          ->first();
+          
+          if (!$voucher) {
+            throw new \Exception('Voucher tidak valid atau belum belum ditukar');
+          }
+
+        $voucherDiscount = $voucher->discount_amount ?? 0;
+      }
+
+      // grand total
+      $finalAmount = $totalAfterMembership - $voucherDiscount;
+      if ($finalAmount < 0) $finalAmount = 0; 
+
+      // Cek saldo user
+      if ($user->saldo < $finalAmount) {
+        throw new \Exception('Saldo Anda tidak cukup untuk melakukan transaksi');
+      }
+
+      // Hitung poin berdasarkan tier
+      $pointsEarned = floor($finalAmount / 30000) * $currentMembership->point_multiplier;
+
       // Mengurangi stok
       foreach ($itemsData as $data) {
         $data['product']->stock -= $data['quantity'];
@@ -77,6 +88,9 @@ class TransactionService
       $transaction = Transaction::create([
         'user_id' => $user->id,
         'voucher_id' => $voucherId,
+        'subtotal' => $subtotal,
+        'voucher_discount' => $voucherDiscount,
+        'membership_discount' => $membershipDiscount,
         'total_amount' => $finalAmount,
         'points_earned' => $pointsEarned,
       ]);
@@ -93,7 +107,11 @@ class TransactionService
       }
 
       DB::commit();
-      return ['success' => true, 'points' => $pointsEarned, 'transaction' => $transaction];
+      return [
+        'success' => true,
+        'points' => $pointsEarned,
+        'transaction' => $transaction
+      ];
 
     } catch (\Exception $e) {
       DB::rollBack();
@@ -108,7 +126,11 @@ class TransactionService
       ->first();
 
     if(!$membership) {
-      return(object) ['id' => 1, 'point_multiplier' => 1, 'discount_percentage' => 0];
+      return(object) [
+        'id' => 1,
+        'point_multiplier' => 1,
+        'discount_percentage' => 0
+      ];
     }
 
     return $membership;

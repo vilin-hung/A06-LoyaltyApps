@@ -36,9 +36,9 @@
 <table border="1" cellpadding="10" style="border-collapse: collapse;">
     <tr>
         <th>Tier</th>
-        <th>Syarat Total Belanja</th>
-        <th>Diskon Otomatis</th>
-        <th>Bonus Pengali Poin</th>
+        <th>Min. Transaksi</th>
+        <th>Diskon</th>
+        <th>Pengganda Poin</th>
     </tr>
     
     @forelse($memberships as $tier)
