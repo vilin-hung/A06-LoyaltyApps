@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Tambah Product</title>
+    <title>Tambah Produk</title>
 </head>
 <body>
 
 <!-- Halaman form untuk menambahkan product baru -->
-<h1>Tambah Product</h1>
+<h1>Tambah Produk</h1>
 
 <form action="{{ route('products.store') }}" method="POST">
     @csrf
@@ -15,23 +15,23 @@
     <input type="text" name="name"><br><br>
 
     <!-- Input deskripsi product -->
-    <label>Description:</label><br>
+    <label>Deskripsi:</label><br>
     <textarea name="description"></textarea><br><br>
 
     <!-- Input harga product -->
-    <label>Price:</label><br>
+    <label>Harga:</label><br>
     <input type="number" step="0.01" name="price"><br><br>
 
     <!-- Input stok product -->
-    <label>Stock:</label><br>
+    <label>Stok:</label><br>
     <input type="number" name="stock"><br><br>
 
     <!-- Dropdown kategori product -->
-    <label>Category:</label><br>
+    <label>Kategori:</label><br>
     <select name="category" required>
         <option value="">-- Pilih Category --</option>
-        <option value="beverages" {{ old('category') == 'beverages' ? 'selected' : '' }}>Beverages</option>
-        <option value="snacks" {{ old('category') == 'snacks' ? 'selected' : '' }}>Snacks</option>
+        <option value="minuman" {{ old('category') == 'minuman' ? 'selected' : '' }}>minuman</option>
+        <option value="makanan" {{ old('category') == 'makanan' ? 'selected' : '' }}>makanan</option>
     </select>
 
     @error('category')

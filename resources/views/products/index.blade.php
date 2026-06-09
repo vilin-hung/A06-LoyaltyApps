@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Products</title>
+    <title>Daftar Produk</title>
     <style>
         .btn {
             padding: 5px 10px;
@@ -18,17 +18,17 @@
 <body>
 
 <!-- Halaman daftar all product -->
-<h1>Daftar Product</h1>
+<h1>Daftar Produk</h1>
 
 @if(Auth::check() && Auth::user()->role == 'admin')
     <p>
         <a href="{{ route('admin.dashboard') }}" class="btn">
-            Kembali ke Dashboard
+            Kembali ke Beranda Admin
         </a>
-        <!-- Button 'tambah product' hanya untuk admin -->
+        <!-- Button 'tambah produk' hanya untuk admin -->
         &nbsp;&nbsp;
         <a href="{{ route('products.create') }}" class="btn">
-            Tambah Product
+            Tambah Produk
         </a>
     </p>
 @else
@@ -56,9 +56,9 @@
         <!-- Status stok product -->
         <td>
             @if($product->stock > 0)
-                Available
+                Tersedia
             @else
-                Out of Stock
+                Kosong
             @endif
         </td>
         <td>
@@ -70,7 +70,7 @@
             <!-- Button edit dan delete product (admin only) -->
             @if(Auth::check() && Auth::user()->role == 'admin')
                 <a href="{{ route('products.edit', $product->id) }}" class="btn">
-                    Edit
+                    Ubah
                 </a>
                 <!-- Form delete product -->
                 <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
@@ -78,7 +78,7 @@
                     @method('DELETE')
 
                     <button type="submit" class="btn" onclick="return confirm('Hapus product ini?')">
-                        Delete
+                        Hapus
                     </button>
                 </form>
             @endif

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Edit Product</title>
+    <title>Edit Produk</title>
 </head>
 <body>
 
 <!-- Halaman form untuk mengedit data product -->
-<h1>Edit Product</h1>
+<h1>Edit Produk</h1>
 
 <form action="{{ route('products.update', $product->id) }}" method="POST">
     @csrf
@@ -17,27 +17,27 @@
     <input type="text" name="name" value="{{ $product->name }}"><br><br>
 
     <!-- Input deskripsi product -->
-    <label>Description:</label><br>
+    <label>Deskripsi:</label><br>
     <textarea name="description">{{ $product->description }}</textarea><br><br>
 
     <!-- Input harga product -->
-    <label>Price:</label><br>
+    <label>Harga:</label><br>
     <input type="number" step="0.01" name="price" value="{{ $product->price }}"><br><br>
 
     <!-- Input stok product -->
-    <label>Stock:</label><br>
+    <label>Stok:</label><br>
     <input type="number" name="stock" value="{{ $product->stock }}"><br><br>
 
     <!-- Dropdown kategori product -->
-    <label>Category:</label><br>
+    <label>Kategori:</label><br>
     <select name="category" required>
-        <option value="">-- Pilih Category --</option>
-        <option value="beverages" {{ old('category', $product->category) == 'beverages' ? 'selected' : '' }}>Beverages</option>
-        <option value="snacks" {{ old('category', $product->category) == 'snacks' ? 'selected' : '' }}>Snacks</option>
+        <option value="">-- Pilih Kategori --</option>
+        <option value="minuman" {{ old('category', $product->category) == 'minuman' ? 'selected' : '' }}>minuman</option>
+        <option value="makanan" {{ old('category', $product->category) == 'makanan' ? 'selected' : '' }}>makanan</option>
     </select>
 
     <button type="submit">
-        Update
+        Perbarui 
     </button>
 </form>
 
