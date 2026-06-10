@@ -3,6 +3,12 @@
 <head>
     <title>Riwayat Redeem</title>
 </head>
+
+<br>
+<a href="{{ route('home') }}">
+    Kembali ke Beranda
+</a>
+
 <body>
 
 <h1>Riwayat Redeem</h1>
