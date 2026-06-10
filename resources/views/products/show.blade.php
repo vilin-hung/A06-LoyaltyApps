@@ -55,7 +55,9 @@
 
     <!-- Akses edit hanya untuk pemillik review -->
     @if(Auth::id() == $review->user_id)
-        <a href="{{ route('reviews.edit', $review->id) }}">[Ubah]</a>
+        <a href="{{ route('reviews.edit', ['review' => $review->id, 'from' => 'product']) }}">
+            [Ubah]
+        </a>
     @endif
     <hr>
 @empty
