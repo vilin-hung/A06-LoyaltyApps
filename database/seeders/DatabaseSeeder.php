@@ -57,6 +57,7 @@ class DatabaseSeeder extends Seeder
             TransactionSeeder::class,
             VoucherSeeder::class,
             ProductSeeder::class,
+            ReviewSeeder::class,
         ]);
     }
 }
