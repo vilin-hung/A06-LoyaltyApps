@@ -4,10 +4,6 @@
 <body>
 
 <div>
-  <button type="submit" formaction="{{ route('home') }}">
-    Kembali ke Beranda
-  </button>
-
   <h2>Keranjang Belanja</h2>
 
   @if(session('error'))
@@ -117,10 +113,25 @@
         <button type="submit" formaction="{{ route('carts.checkout') }}" method="POST">
           Buat Pesanan Sekarang
         </button>
+        <br><br>
+        <p>Tidak jadi belanja? <a href="{{ route('products.index') }}">Lihat Daftar Produk</a></p>
       </div>
 
   </form>
   @endif
+
+    @if(auth()->user()->role === 'user')
+        <form action="{{ route('home') }}">
+        <button type="submit">Kembali ke Beranda</button>
+        </form>        
+    @endif
+
+    @if(auth()->user()->role === 'admin')
+        <form action="{{ route('admin.dashboard') }}">
+        <button type="submit">Kembali ke Beranda Admin</button>
+        </form>   
+    @endif
+    </p>
 </div>
 
 </body>
