@@ -22,7 +22,7 @@
 
 <p>
     <a href="{{ route('admin.dashboard') }}" class="btn">
-        Kembali ke Dashboard
+        Kembali ke Beranda Admmin
     </a>
     <!-- Button 'tambah tier membership' hanya untuk admin -->
     @if(Auth::check() && auth()->user()->role === 'admin')
