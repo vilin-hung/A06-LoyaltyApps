@@ -19,7 +19,7 @@
                 id="quantity"
                 value="{{ $cart->quantity }}"
                 min="1" required
-                max="{{ $product->stock }}"
+                max="{{ $cart->product->stock }}"
             >
         </p>
 

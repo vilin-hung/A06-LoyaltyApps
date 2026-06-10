@@ -18,7 +18,7 @@
     <p>Keranjang kosong. <a href="{{ route('products.index') }}">Belanja dulu</a></p>
   @else
       
-    <form method="POST">
+    <form method="POST" id="cart-calculation-form">
       @csrf
 
       <table border="1" cellpadding="5" cellspacing="0" style="width: auto; display: table; margin-left: 0;">
@@ -37,7 +37,7 @@
           @foreach($cartItems as $item)
             <tr>
               <td>
-                <input type="checkbox"name="cart_ids[]" value="{{ $item->id }}"
+                <input type="checkbox"name="cart_ids[]" value="{{ $item->id }}" form="checkout-form"
                 {{ isset($checkedIds) && in_array($item->id, $checkedIds) ? 'checked' : '' }}>
               </td>
 
@@ -59,19 +59,12 @@
               </td>
 
               <td>
-                <form action="{{ route('carts.edit', $item->id) }}">
-                  <button type="submit">Ubah</button>
-                </form>
-
-                <form action="{{ route('carts.destroy', $item->id) }}" 
-                  method="POST"
-                  onsubmit="return confirm('Yakin ingin menghapus item ini dari keranjang?');">
-                  @csrf
-                  @method('DELETE')
-                  <button type="submit">Hapus</button>
-                </form>
+                <a href="{{ route('carts.edit', $item->id) }}">
+                  Ubah
+                </a>
+                |
+                <button type="submit" form="delete-form-{{ $item->id }}">Hapus</button>
               </td>
-              
             </tr>
           @endforeach
         </tbody>
@@ -82,7 +75,7 @@
       <div>
         <strong>Opsi Pembayaran & Voucher</strong><br>
         <label>Pilih Voucher Terbuka:</label>
-        <select name="voucher_id">
+        <select name="voucher_id" form="checkout-form">
           <option value="">-- Tanpa Voucher --</option>
           @foreach($myVouchers as $v)
             @php
@@ -100,6 +93,7 @@
           Hitung Ulang Angka Pembayaran
         </button>
       </div>
+</form>
 
       <br>
 
@@ -110,15 +104,27 @@
         <br><br>
         <h3>Total Akhir: Rp {{ number_format($totalFinal ?? 0, 0, ',', '.') }}</h3>
         
-        <button type="submit" formaction="{{ route('carts.checkout') }}" method="POST">
-          Buat Pesanan Sekarang
-        </button>
+        <form action="{{ route('carts.checkout') }}" method="POST" id="checkout-form">
+        @csrf
+        <button type="submit">
+            Buat Pesanan Sekarang
+          </button>
+        </form>
+
         <br><br>
         <p>Tidak jadi belanja? <a href="{{ route('products.index') }}">Lihat Daftar Produk</a></p>
       </div>
 
-  </form>
-  @endif
+  @foreach($cartItems as $item)
+    <form id="delete-form-{{ $item->id }}"
+      action="{{ route('carts.destroy', $item->id) }}" 
+      method="POST"
+      onsubmit="return confirm('Yakin ingin menghapus item ini dari keranjang?');">
+      @csrf
+      @method('DELETE')
+    </form>
+  @endforeach
+@endif
 
     @if(auth()->user()->role === 'user')
         <form action="{{ route('home') }}">
