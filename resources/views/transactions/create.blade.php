@@ -32,14 +32,16 @@
     </table>
 
     <h3>Opsi Pembayaran & Voucher</h3>
-    <label>Pilih Voucher Terbuka:</label>
+    <label>Pilih Voucher:</label>
     <select name="voucher_id">
-        <option value="">-- Tanpa Voucher --</option>
-        @foreach($vouchers as $voucher)
+        <option value="" style="background-color: #e8f8f5; color: #117a65; padding: 2px 6px; border-radius: 4px;">
+            -- Tanpa Voucher --
+        </option>
+        @foreach($myVouchers as $voucher)
             <option value="{{ $voucher->id }}">
                 {{ $voucher->code }}
                 (Potongan: 
-                @if($voucher->type === 'percentage')
+                @if($voucher->discount_type === 'percentage')
                    {{ $voucher->discount_value }}% 
                 @else
                     Rp {{ $voucher->discount_value }}
@@ -61,8 +63,17 @@
         <h3>Total Akhir: Rp {{ number_format($totalFinal ?? 0, 0, ',', '.') }}</h3>
     </div> 
 
+    <button style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+            type="submit"
+            formaction="{{ route('transactions.create') }}"
+            formmethod="GET">
+        Hitung Ulang Angka Pembayaran
+    </button>
     <br><br>
-    <button type="submit">Buat Pesanan Sekarang</button>
+
+    <button style="background: #7b9e87; color: #f7f4ef; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+        type="submit">Buat Pesanan Sekarang
+    </button>
     <br><br>
 
     <p>Tidak jadi belanja?
@@ -78,7 +89,8 @@
         <input type="hidden" name="quantity" value="{{ $quantity }}">
         <input type="hidden" name="redirect_to_cart" value="1">
     
-        <button type="submit">
+        <button style="background: #7b9e87; color: #f7f4ef; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+            type="submit">
             Simpan ke Keranjang & Ubah Jumlah
         </button>
     </form>

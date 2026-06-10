@@ -18,6 +18,7 @@
         <th>ID</th>
         <th>Voucher</th>
         <th>Poin</th>
+        <th>Status</th>
     </tr>
 
     @foreach($redeems as $redeem)
@@ -25,6 +26,7 @@
         <td>{{ $redeem->id }}</td>
         <td>{{ $redeem->voucher->name }}</td>
         <td>{{ $redeem->points_spent }}</td>
+        <td>{{ $redeem->status === 'used' ? 'Sudah Dipakai' : 'Belum Dipakai' }}</td>
     </tr>
     @endforeach
 

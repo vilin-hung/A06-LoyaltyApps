@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-    <title>Transaksi Berhasil</title>
+    <title>Detail Transaksi</title>
 </head>
 <body>
 
@@ -50,14 +50,14 @@
 
         @if($transaction->membership_discount > 0)
             <tr>
-                <td colspan="2" style="color: #e74c3c;"><strong>Diskon Member:</strong></td>
+                <td colspan="2" style="color: #2d6601;"><strong>Diskon Member:</strong></td>
                 <td>- Rp {{ number_format($transaction->membership_discount, 0, ',', '.') }}</td>
             </tr>
         @endif
 
         @if($transaction->voucher_discount > 0)
             <tr>
-                <td colspan="2" style="color: #e74c3c;"><strong>Diskon Voucher:</strong></td>
+                <td colspan="2" style="color: #2d6601;"><strong>Diskon Voucher:</strong></td>
                 <td>- Rp {{ number_format($transaction->voucher_discount, 0, ',', '.') }}</td>
             </tr>
         @endif
@@ -74,33 +74,51 @@
     <p>
         @if(auth()->user()->role === 'user')
             <form action="{{ route('transactions.index') }}">
-            <button type="submit">Lihat Transaksi Lainnya</button>
+                <button style="background: #7b9e87; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                    type="submit">
+                    Lihat Transaksi Lainnya
+                </button>
             </form>
             <br>
 
             <form action="{{ route('carts.index') }}">
-            <button type="submit">Intip Keranjangku</button>
+                <button style="background: #7b9e87; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                    type="submit">
+                    Intip Keranjangku
+                </button>
             </form>
             <br>
 
             <form action="{{ route('products.index') }}">
-            <button type="submit">Lihat Daftar Produk</button>
+                <button style="background: #7b9e87; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                    type="submit">
+                    Lihat Daftar Produk
+                </button>
             </form>
             <br>
 
             <form action="{{ route('home') }}">
-            <button type="submit">Kembali ke Beranda</button>
+                <button style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                    type="submit">
+                    Kembali ke Beranda
+                </button>
             </form>        
         @endif
 
         @if(auth()->user()->role === 'admin')
             <form action="{{ route('transactions.admin_index') }}">
-            <button type="submit">Lihat Transaksi Lainnya</button>
+                <button style="background: #7b9e87; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                    type="submit">
+                    Lihat Transaksi Lainnya
+                </button>
             </form>
             <br>
 
             <form action="{{ route('admin.dashboard') }}">
-            <button type="submit">Kembali ke Beranda Admin</button>
+                <button style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                    type="submit">
+                    Kembali ke Beranda Admin
+                </button>
             </form>   
         @endif
     </p>
