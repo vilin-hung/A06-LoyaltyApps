@@ -25,6 +25,20 @@
         <a href="{{ route('admin.dashboard') }}" class="btn">
             Kembali ke Beranda Admin
         </a>  
+        &nbsp;&nbsp;
+        <a href="{{ route('products.index') }}" class="btn">
+            Daftar Produk
+        </a>
+    </p>
+@else
+    <p>
+        <a href="{{ route('home') }}" class="btn">
+            Kembali ke Beranda
+        </a>
+        &nbsp;&nbsp;
+        <a href="{{ route('products.index') }}" class="btn">
+            Daftar Produk
+        </a>
     </p>
 @endif
 <br>
@@ -53,6 +67,12 @@
         <td>{{ $review->comment }}</td>
 
         <td>
+            {{-- User pemilik review bisa edit --}}
+            @if(Auth::check() && Auth::id() == $review->user_id)
+                <a href="{{ route('reviews.edit', ['review' => $review->id, 'from' => 'index']) }}" class="btn">
+                    Ubah
+                </a>
+            @endif
             <!-- Aksi delete review (admin only) -->
             @if(Auth::check() && Auth::user()->role == 'admin')
                 <form action="{{ route('reviews.destroy', $review->id) }}" method="POST">
