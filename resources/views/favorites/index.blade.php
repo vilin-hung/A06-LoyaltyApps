@@ -3,18 +3,16 @@
 <head>
     <title>Produk Favorit</title>
 </head>
+<body>
 
-<br><br>
-<a href="{{ route('home') }}" class="btn">
+<a href="{{ route('home') }}">
     Kembali ke Beranda
 </a>
-
-<body>
 
 <h1>Produk Favorit Saya</h1>
 
 @if(session('success'))
-    <p style="color:green;">
+    <p style="color: green;">
         {{ session('success') }}
     </p>
 @endif
