@@ -17,6 +17,12 @@
 </head>
 <body>
 
+@if(session('success'))
+    <p style="color: green;">
+        {{ session('success') }}
+    </p>
+@endif
+
 <!-- Halaman daftar all product -->
 <h1>Daftar Produk</h1>
 
@@ -58,12 +64,11 @@
             <th>Aksi</th>
         </tr>
 
-        @foreach($categoryProducts as $product)
+    @foreach($categoryProducts as $product)
         <tr>
-            <!-- Menampilkan nama product -->
             <td>{{ $product->name }}</td>
             <td>Rp {{ number_format($product->price, 2, ',', '.') }}</td>
-            <!-- Status stok product -->
+
             <td>
                 @if($product->stock > 0)
                     Tersedia
@@ -71,30 +76,45 @@
                     Kosong
                 @endif
             </td>
+
             <td>
-                <!-- Button detail product (bisa diakses semua user) -->
                 <a href="{{ route('products.show', $product->id) }}" class="btn">
                     Detail
                 </a>
-                
-                <!-- Button edit dan delete product (admin only) -->
+
+                @if(Auth::check() && Auth::user()->role != 'admin')
+                    <form action="{{ route('favorites.store', $product->id) }}"
+                        method="POST"
+                        style="display:inline;">
+                        @csrf
+
+                        <button type="submit" class="btn">
+                            Favorit
+                        </button>
+                    </form>
+                @endif
+
                 @if(Auth::check() && Auth::user()->role == 'admin')
                     <a href="{{ route('products.edit', $product->id) }}" class="btn">
                         Ubah
                     </a>
-                    <!-- Form delete product -->
-                    <form action="{{ route('products.destroy', $product->id) }}" method="POST" style="display:inline;">
+
+                    <form action="{{ route('products.destroy', $product->id) }}"
+                        method="POST"
+                        style="display:inline;">
                         @csrf
                         @method('DELETE')
 
-                        <button type="submit" class="btn" onclick="return confirm('Hapus product ini?')">
+                        <button type="submit"
+                                class="btn"
+                                onclick="return confirm('Hapus product ini?')">
                             Hapus
                         </button>
                     </form>
                 @endif
             </td>
-        </tr>
-        @endforeach
+        </tr>   
+    @endforeach
     </table>
 <br><br>
 @endforeach
