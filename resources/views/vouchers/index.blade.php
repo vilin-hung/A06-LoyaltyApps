@@ -21,7 +21,7 @@
 <p>
     @if(Auth::check() && auth()->user()->role === 'admin')
         <a href="{{ route('admin.dashboard') }}" class="btn">
-            Kembali ke Dashboard
+            Kembali ke Beranda Admin
         </a>
         &nbsp;&nbsp;<a href="{{ route('vouchers.create') }}" class="btn">
             Tambah Voucher
