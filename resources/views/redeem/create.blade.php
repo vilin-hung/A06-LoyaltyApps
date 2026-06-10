@@ -3,6 +3,11 @@
 <head>
     <title>Tukar Voucher</title>
 </head>
+
+<br>
+<a href="{{ route('home') }}">
+    Kembali ke Beranda
+</a>
 <body>
 
 <h1>Tukar Voucher</h1>
