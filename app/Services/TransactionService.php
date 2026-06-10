@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Membership;
 use App\Models\Product;
+use App\Models\Redeem;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
 use App\Models\User;
@@ -41,25 +42,26 @@ class TransactionService
       // cek benefit dari tier
       $currentMembership = self::getUserTier($user->total_spent);
       $membershipDiscount = $subtotal * ($currentMembership->discount_percentage / 100);
-      $totalAfterMembership = $subtotal - $membershipDiscount;
 
       // cek potongan voucher
       $voucherDiscount = 0;
       if ($voucherId) {
         $voucher = Voucher::where('id', $voucherId)
-          ->where('user_id', $userId)
-          ->where('status', 'redeemed')
           ->first();
           
           if (!$voucher) {
             throw new \Exception('Voucher tidak valid atau belum belum ditukar');
           }
 
-        $voucherDiscount = $voucher->discount_amount ?? 0;
+          if ($voucher->discount_type === 'percentage') {
+            $voucherDiscount = $subtotal * ($voucher->discount_value / 100);
+          } else {
+            $voucherDiscount = $voucher->discount_value ?? 0;
+          }
       }
 
       // grand total
-      $finalAmount = $totalAfterMembership - $voucherDiscount;
+      $finalAmount = $subtotal - $membershipDiscount - $voucherDiscount;
       if ($finalAmount < 0) $finalAmount = 0; 
 
       // Cek saldo user
@@ -106,7 +108,14 @@ class TransactionService
         ]);
       }
 
+      if($voucherId) {
+        Redeem::where('user_id', $userId)
+          ->where('voucher_id', $voucherId)
+          ->update(['status'=>'used']);
+      }
+
       DB::commit();
+      
       return [
         'success' => true,
         'points' => $pointsEarned,
