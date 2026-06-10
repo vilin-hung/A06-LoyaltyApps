@@ -21,8 +21,13 @@ class NewsController extends Controller implements HasMiddleware
     // Menampilkan seluruh daftar berita
     public function index()
     {
-        // Mengambil semua berita dari yang paling baru
-        $news = News::latest()->get();
+        // Jika admin, tampilkan semua berita
+        if (auth()->user()->role == 'admin') {
+            $news = News::latest()->get();
+        } else {
+            // Jika user, tampilkan hanya yang statusnya aktif
+            $news = News::where('status', true)->latest()->get();
+        }
         return view('news.index', compact('news'));
     }
 
@@ -43,6 +48,7 @@ class NewsController extends Controller implements HasMiddleware
         ]);
 
         $validated['admin_id'] = auth()->id();
+        $validated['status'] = true;
 
         // Membuat data berita baru
         News::create($validated);
@@ -69,6 +75,9 @@ class NewsController extends Controller implements HasMiddleware
             'title' => 'required',
             'content' => 'required',
         ]);
+
+        // Fix checkbox status
+        $validated['status'] = $request->input('status') == '1';
 
         // Memperbarui data ke database
         $news->update($validated);

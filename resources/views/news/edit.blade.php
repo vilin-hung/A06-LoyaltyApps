@@ -17,6 +17,11 @@
 </head>
 <body>
     <h1>Edit Berita</h1>
+
+    @if(session('success'))
+        <p style="color: green;"><b>{{ session('success') }}</b></p>
+    @endif <br>
+
     <!-- Form edit berita -->
     <form method="POST" action="{{ route('news.update', $news->id) }}"> 
         @csrf
@@ -31,5 +36,7 @@
         </p>
         <button type="submit" class="btn">Update</button>
     </form>
+    <br>
+    <a href="{{ route('news.index') }}">Kembali ke Daftar Berita</a>
 </body>
 </html>

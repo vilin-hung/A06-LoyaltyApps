@@ -81,4 +81,11 @@ class UserController extends Controller
         // Balik ke page, kirim pesan berhasil
         return redirect()->route('saldo')->with('success', 'Top up berhasil!');
     }
+
+    // Admin dapat melihat semua user
+    public function adminIndex()
+    {
+        $users = User::where('role', 'user')->with('membership')->latest()->get();
+        return view('admin.users', compact('users'));
+    }
 }

@@ -48,6 +48,7 @@ class DatabaseSeeder extends Seeder
         News::create([
             'title' => 'Jam Buka Kedai Kopi Kita',
             'content' => 'Buka jam 7 pagi - 10 malam. Stay tuned!',
+            'status' => true,
         ]);
 
         $this->call([

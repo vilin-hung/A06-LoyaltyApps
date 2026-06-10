@@ -33,6 +33,10 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     // Home page redirects
     Route::get('/', function () {
+        // Jika admin arahkan ke dashboard admin
+        if (auth()->user()->role == 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
         return view('home', ['user' => auth()->user()]);
     })->name('home');
 
@@ -85,6 +89,8 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
+
+    Route::get('/users', [UserController::class, 'adminIndex'])->name('admin.users');
 
     Route::resource('memberships', MembershipController::class);
 
