@@ -33,7 +33,7 @@
         <li><a href="/products">Produk</a></li>
         <li><a href="/carts">Keranjang</a></li>
         <li><a href="/transactions">Riwayat Transaksi</a></li>
-        <li><a href="/redeem">Tukar Poin</a></li>
+        <li><a href="/redeems">Tukar Poin</a></li>
         <li><a href="/vouchers">Voucher Saya</a></li>
         <li><a href="/news">Berita</a></li>
     </ul>

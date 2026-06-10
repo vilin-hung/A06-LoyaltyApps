@@ -30,12 +30,11 @@ class RedeemController extends Controller
         ]);
 
         $user = Auth::user();
-
-        if ($user->points < 10) {
+        $voucher = Voucher::find($request->voucher_id);
+        if ($user->points < $voucher->points_required) {
             return back()->with('error', 'Poin tidak cukup');
         }
 
-        $voucher = Voucher::findOrFail($request->voucher_id);
 
         if ($voucher->quota <= 0) {
             return back()->with('error', 'Voucher habis');
@@ -44,10 +43,10 @@ class RedeemController extends Controller
         Redeem::create([
             'user_id' => $user->id,
             'voucher_id' => $voucher->id,
-            'points_spent' => 10,
+            'points_spent' => $voucher->points_required,
         ]);
 
-        $user->points -= 10;
+        $user->points -= $voucher->points_required;
         $user->save();
 
         $voucher->quota -= 1;
