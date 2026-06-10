@@ -3,6 +3,12 @@
 <head>
     <title>Produk Favorit</title>
 </head>
+
+<br><br>
+<a href="{{ route('home') }}" class="btn">
+    Kembali ke Beranda
+</a>
+
 <body>
 
 <h1>Produk Favorit Saya</h1>
