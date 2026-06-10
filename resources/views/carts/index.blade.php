@@ -18,7 +18,7 @@
     <p>Keranjang kosong. <a href="{{ route('products.index') }}">Belanja dulu</a></p>
   @else
       
-    <form method="POST" id="cart-calculation-form">
+    <form action="{{ route('carts.index') }}" method="GET" id="cart-calculation-form">
       @csrf
 
       <table border="1" cellpadding="5" cellspacing="0" style="width: auto; display: table; margin-left: 0;">
@@ -36,9 +36,12 @@
         <tbody>
           @foreach($cartItems as $item)
             <tr>
-              <td>
-                <input type="checkbox"name="cart_ids[]" value="{{ $item->id }}" form="checkout-form"
-                {{ isset($checkedIds) && in_array($item->id, $checkedIds) ? 'checked' : '' }}>
+              <td style="text-align:center">
+                <input type="checkbox"
+                      name="cart_ids[]"
+                      value="{{ $item->id }}"
+                      form="cart-calculation-form"
+                      {{ isset($checkedIds) && in_array($item->id, $checkedIds) ? 'checked' : '' }}>
               </td>
 
               <td>
@@ -50,7 +53,7 @@
                 Rp {{ number_format($item->product->price, 0, ',', '.') }}
               </td>
               
-              <td>
+              <td style="text-align:center">
                 {{ $item->quantity }}
               </td>
 
@@ -59,11 +62,24 @@
               </td>
 
               <td>
-                <a href="{{ route('carts.edit', $item->id) }}">
+                <button style="background: #7b9e87; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                  type="button"
+                  onclick="window.location='{{ route('carts.show', $item->id) }}'">
+                  Detail
+                </button>
+
+                <button style="background: #2d6601; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                  type="submit"
+                  form="edit-form-{{ $item->id }}">
                   Ubah
-                </a>
-                |
-                <button type="submit" form="delete-form-{{ $item->id }}">Hapus</button>
+                </button>
+  
+                <button style="background: #981e11; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                    type="submit"
+                    form="delete-form-{{ $item->id }}"
+                    onclick="return confirm('Hapus product ini?')">
+                  Hapus
+                </button>
               </td>
             </tr>
           @endforeach
@@ -74,52 +90,77 @@
 
       <div>
         <strong>Opsi Pembayaran & Voucher</strong><br>
-        <label>Pilih Voucher Terbuka:</label>
-        <select name="voucher_id" form="checkout-form">
+        <label>Pilih Voucher:</label>
+        <select name="voucher_id" form="cart-calculation-form">
           <option value="">-- Tanpa Voucher --</option>
           @foreach($myVouchers as $v)
             @php
               $isTemplateSelected = (isset($selectedVoucherId) && $selectedVoucherId == $v->id);
             @endphp
             <option value="{{ $v->id }}" {{ $isTemplateSelected ? 'selected' : '' }}>
-              {{ $v->code }} (Potongan Rp {{ number_format($v->discount_amount, 0, ',', '.') }})
+              @if($v->discount_type === 'percentage')
+                {{ $v->code }} (Potongan {{ $v->discount_value }}%)
+              @else
+                {{ $v->code }} (Potongan Rp {{ number_format($v->discount_value, 0, ',', '.') }})
+              @endif
             </option>
           @endforeach
         </select>
         
         <br><br>
         
-        <button type="submit" formaction="{{ route('carts.index') }}" formmethod="GET">
+        <button style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+          type="submit"
+          formaction="{{ route('carts.index') }}"
+          formmethod="GET">
           Hitung Ulang Angka Pembayaran
         </button>
       </div>
-</form>
+    </form>
+    <hr>
+    <div>
+      <p>Subtotal Terpilih: <strong>Rp {{ number_format($subtotalChosen ?? 0, 0, ',', '.') }}</strong></p>
+      <p>Diskon Membership: <strong>-Rp {{ number_format($membershipDiscount ?? 0, 0, ',', '.') }}</strong></p>
+      <p>Diskon Voucher: <strong>-Rp {{ number_format($voucherDiscount ?? 0, 0, ',', '.') }}</strong></p>
+      <hr>
+      <h3>Total Akhir: Rp {{ number_format($totalFinal ?? 0, 0, ',', '.') }}</h3>
+      
+      <form action="{{ route('carts.checkout') }}" method="POST" id="checkout-form">
+      @csrf
 
-      <br>
+      @if(isset($checkedIds))
+        @foreach($checkedIds as $id)
+          <input type="hidden"
+                name="cart_ids[]"
+                value="{{ $item->id }}">
+        @endforeach
+      @endif
 
-      <div>
-        <p>Subtotal Terpilih: <strong>Rp {{ number_format($subtotalChosen ?? 0, 0, ',', '.') }}</strong></p>
-        <p>Diskon Membership: <strong>-Rp {{ number_format($membershipDiscount ?? 0, 0, ',', '.') }}</strong></p>
-        <p>Diskon Voucher: <strong>-Rp {{ number_format($voucherDiscount ?? 0, 0, ',', '.') }}</strong></p>
-        <br><br>
-        <h3>Total Akhir: Rp {{ number_format($totalFinal ?? 0, 0, ',', '.') }}</h3>
-        
-        <form action="{{ route('carts.checkout') }}" method="POST" id="checkout-form">
-        @csrf
-        <button type="submit">
-            Buat Pesanan Sekarang
-          </button>
-        </form>
+      @if(isset($selectedVoucherId))
+        <input type="hidden"
+              name="voucher_id"
+              value="{{ $selectedVoucherId }}">
+      @endif
 
-        <br><br>
-        <p>Tidak jadi belanja? <a href="{{ route('products.index') }}">Lihat Daftar Produk</a></p>
-      </div>
+      <button style="background: #7b9e87; color: #f7f4ef; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+          type="submit">
+          Buat Pesanan Sekarang
+        </button>
+      </form>
+
+      <br><br>
+      <p>Tidak jadi belanja? <a href="{{ route('products.index') }}">Lihat Daftar Produk</a></p>
+    </div>
 
   @foreach($cartItems as $item)
+    <form id="edit-form-{{ $item->id }}"
+      action="{{ route('carts.edit', $item->id) }}" 
+      method="GET">
+    </form>
+  
     <form id="delete-form-{{ $item->id }}"
       action="{{ route('carts.destroy', $item->id) }}" 
-      method="POST"
-      onsubmit="return confirm('Yakin ingin menghapus item ini dari keranjang?');">
+      method="POST">
       @csrf
       @method('DELETE')
     </form>
@@ -128,14 +169,20 @@
 
     @if(auth()->user()->role === 'user')
         <form action="{{ route('home') }}">
-        <button type="submit">Kembali ke Beranda</button>
+          <button style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+            type="submit">
+            Kembali ke Beranda
+          </button>
         </form>        
     @endif
 
     @if(auth()->user()->role === 'admin')
         <form action="{{ route('admin.dashboard') }}">
-        <button type="submit">Kembali ke Beranda Admin</button>
-        </form>   
+          <button style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+            type="submit">
+            Kembali ke Beranda Admin
+          </button>
+        </form>
     @endif
     </p>
 </div>

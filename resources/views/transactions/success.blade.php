@@ -20,17 +20,26 @@
 
     <p>     
       <form action="{{ route('products.index') }}">
-        <button type="submit">Belanja Lagi 🤑</button>
+        <button style="background: #7b9e87; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+           type="submit">
+           Belanja Lagi 🤑
+        </button>
       </form>
       <br>
       
       <form action="{{ route('transactions.index') }}">
-        <button type="submit">Lihat Riwayat Transaksi</button>
+        <button style="background: #7b9e87; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+          type="submit">
+          Lihat Riwayat Transaksi
+        </button>
       </form>
       <br>
 
       <form action="{{ route('home') }}">
-        <button type="submit">Kembali ke Beranda</button>
+        <button style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+          type="submit">
+          Kembali ke Beranda
+        </button>
       </form>
     </p>
   </div>

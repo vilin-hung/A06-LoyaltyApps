@@ -10,6 +10,7 @@ class Redeem extends Model
         'user_id',
         'voucher_id',
         'points_spent',
+        'status',
     ];
 
     public function user()

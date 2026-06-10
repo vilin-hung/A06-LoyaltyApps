@@ -18,7 +18,9 @@ class RedeemController extends Controller
 
     public function create()
     {
-        $vouchers = Voucher::all();
+        $vouchers = Voucher::where('is_active', true)
+            ->where('quota', '>' ,0)
+            ->get();
 
         return view('redeem.create', compact('vouchers'));
     }
@@ -31,6 +33,11 @@ class RedeemController extends Controller
 
         $user = Auth::user();
         $voucher = Voucher::find($request->voucher_id);
+
+        if(!$voucher->is_active) {
+            return back()->with('error', 'Voucher tidak aktif');
+        }
+        
         if ($user->points < $voucher->points_required) {
             return back()->with('error', 'Poin tidak cukup');
         }
