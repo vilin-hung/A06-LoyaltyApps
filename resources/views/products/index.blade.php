@@ -17,6 +17,12 @@
 </head>
 <body>
 
+@if(session('success'))
+    <p style="color: green;">
+        {{ session('success') }}
+    </p>
+@endif
+
 <!-- Halaman daftar all product -->
 <h1>Daftar Product</h1>
 
@@ -67,6 +73,19 @@
                 Detail
             </a>
             
+            <!-- Button favorit (hanya untuk user non-admin) -->
+            @if(Auth::check() && Auth::user()->role != 'admin')
+                <form action="{{ route('favorites.store', $product->id) }}"
+                    method="POST"
+                    style="display:inline;">
+                    @csrf
+
+                    <button type="submit" class="btn">
+                        Favorit
+                    </button>
+                </form>
+            @endif
+
             <!-- Button edit dan delete product (admin only) -->
             @if(Auth::check() && Auth::user()->role == 'admin')
                 <a href="{{ route('products.edit', $product->id) }}" class="btn">
