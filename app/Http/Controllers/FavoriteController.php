@@ -14,12 +14,23 @@ class FavoriteController extends Controller
      */
     public function index()
     {
+        if (Auth::user()->role == 'admin') {
+
+            $favorites = Favorite::selectRaw('product_id, COUNT(*) as total')
+                ->with('product')
+                ->groupBy('product_id')
+                ->get();
+
+            return view('favorites.admin', compact('favorites'));
+        }
+
         $favorites = Favorite::with('product')
             ->where('user_id', Auth::id())
             ->get();
 
         return view('favorites.index', compact('favorites'));
     }
+    
 
     /**
      * Add product to favorites.
