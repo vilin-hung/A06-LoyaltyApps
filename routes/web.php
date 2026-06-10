@@ -12,7 +12,6 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Middleware\AdminMiddleware;
-use App\Http\Controllers\FavoriteController;
 
 /*
     Guest Routes (Belum Login)
@@ -34,6 +33,10 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     // Home page redirects
     Route::get('/', function () {
+        // Jika admin arahkan ke dashboard admin
+        if (auth()->user()->role == 'admin') {
+            return redirect()->route('admin.dashboard');
+        }
         return view('home', ['user' => auth()->user()]);
     })->name('home');
 
@@ -63,7 +66,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('products', ProductController::class);
 
     // Redeem Points
-    Route::resource('redeems', RedeemController::class);
+    Route::get('/redeem', [RedeemController::class, 'create'])->name('redeem.create');
+    Route::post('/redeem', [RedeemController::class, 'store'])->name('redeem.store');
+    Route::get('/redeem/history', [RedeemController::class, 'history'])->name('redeem.history');
     
     // Reviews
     Route::resource('reviews', ReviewController::class);
@@ -74,11 +79,6 @@ Route::middleware('auth')->group(function () {
 
     // Vouchers
     Route::resource('vouchers', VoucherController::class);
-
-    // Favorites
-    Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
-    Route::post('/favorites/{product}', [FavoriteController::class, 'store'])->name('favorites.store');
-    Route::delete('/favorites/{product}', [FavoriteController::class, 'destroy'])->name('favorites.destroy');
 });
 
 /*
@@ -89,6 +89,8 @@ Route::middleware(['auth', AdminMiddleware::class])->group(function () {
     Route::get('/admin/dashboard', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
+
+    Route::get('/users', [UserController::class, 'adminIndex'])->name('admin.users');
 
     Route::resource('memberships', MembershipController::class);
 

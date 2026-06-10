@@ -17,6 +17,11 @@
 </head>
 <body>
     <h1>Tambah Berita</h1>
+
+    @if(session('success'))
+        <p style="color: green;"><b>{{ session('success') }}</b></p>
+    @endif <br>
+
     <!-- Form untuk menambahkan berita -->
     <form method="POST" action="{{ route('news.store') }}">
         @csrf
@@ -30,5 +35,8 @@
         </p>
         <button type="submit" class="btn">Simpan</button>
     </form>
+
+    <br>
+    <a href="{{ route('news.index') }}">Kembali ke Daftar Berita</a>
 </body>
 </html>

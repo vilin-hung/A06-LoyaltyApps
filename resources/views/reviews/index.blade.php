@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Reviews</title>
+    <title>Ulasan</title>
     <style>
         .btn {
             padding: 5px 10px;
@@ -18,12 +18,12 @@
 <body>
 
 <!-- Halaman untuk menampilkan daftar review -->
-<h1>Daftar Review</h1>
+<h1>Daftar Ulasan</h1>
 
 @if(Auth::check() && Auth::user()->role == 'admin')
     <p>
         <a href="{{ route('admin.dashboard') }}" class="btn">
-            Kembali ke Dashboard
+            Kembali ke Beranda Admin
         </a>  
     </p>
 @endif
@@ -60,7 +60,7 @@
                     @method('DELETE')
 
                     <button type="submit" onclick="return confirm('Hapus review ini?')">
-                        Delete
+                        Hapus
                     </button>
                 </form>
             @endif

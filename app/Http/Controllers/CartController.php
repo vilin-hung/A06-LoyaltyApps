@@ -123,6 +123,10 @@ class CartController extends Controller
             ]);
         }
 
+        if ($request->has('redirect_to_cart')) {
+            return redirect()->route('carts.index')->with('success', 'Produk dialihkan ke keranjang.');
+        }
+
         return redirect()
             ->back()
             ->with('success_html', 'Produk ditambahkan ke keranjang.
