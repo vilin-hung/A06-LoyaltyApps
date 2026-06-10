@@ -82,6 +82,9 @@ class ReviewController extends Controller
             'rating' => $request->rating,
             'comment' => $request->comment,
         ]);
+        if ($request->from == 'index') {
+            return redirect()->route('reviews.index');
+        }
         return redirect()->route('products.show', $review->product_id);
     }
 

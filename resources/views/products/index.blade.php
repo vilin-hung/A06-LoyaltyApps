@@ -25,6 +25,10 @@
         <a href="{{ route('admin.dashboard') }}" class="btn">
             Kembali ke Beranda Admin
         </a>
+        &nbsp;&nbsp;
+        <a href="{{ route('reviews.index') }}" class="btn">
+            Lihat Ulasan
+        </a>
         <!-- Button 'tambah produk' hanya untuk admin -->
         &nbsp;&nbsp;
         <a href="{{ route('products.create') }}" class="btn">
@@ -35,6 +39,10 @@
     <p>
         <a href="{{ route('home') }}" class="btn">
             Kembali ke Beranda
+        </a>
+        &nbsp;&nbsp;
+        <a href="{{ route('reviews.index') }}" class="btn">
+            Lihat Ulasan
         </a>
     </p>
 @endif

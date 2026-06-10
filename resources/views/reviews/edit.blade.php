@@ -15,6 +15,7 @@
     <!-- Input rating review -->
     <label>Rating</label>
     <input type="number" name="rating" min="1" max="5" value="{{ $review->rating }}" required>
+    <input type="hidden" name="from" value="{{ request('from') }}">
     <br><br>
 
     <!-- Input comment review -->
