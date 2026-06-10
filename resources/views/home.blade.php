@@ -24,10 +24,6 @@
     <h2>Saldo: Rp {{ number_format(auth()->user()->saldo, 0, ',', '.') }}</h2>
     <h2>Membership: {{ auth()->user()->membership->level ?? 'Silver' }}</h2>
     
-    <a href="{{ route('vouchers.index') }}" class="btn btn-primary">
-        Lihat Daftar Voucher
-    </a>
-    
     <h3>Fitur:</h3>
     <ul>
         <li><a href="/products">Produk</a></li>
@@ -36,7 +32,7 @@
         <li><a href="/transactions">Riwayat Transaksi</a></li>
         <li><a href="{{ route('redeems.create') }}">Tukar Poin</a></li>
         <li><a href="{{ route('redeems.index') }}">Riwayat Redeem</a></li>
-        <li><a href="/vouchers">Voucher Saya</a></li>
+        <li><a href="/vouchers">Daftar Voucher</a></li>
         <li><a href="/news">Berita</a></li>
     </ul>
 </body>
