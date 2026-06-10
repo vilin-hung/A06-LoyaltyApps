@@ -19,6 +19,7 @@
         <li><a href="{{ route('reviews.index') }}">Daftar Review</a></li>
         <li><a href="{{ route('transactions.admin_index') }}">Daftar Transaksi</a></li>
         <li><a href="{{ route('vouchers.index') }}">Daftar Voucher</a></li>
+        <li><a href="{{ route('favorites.index') }}">Daftar Produk Favorit</a></li>
     </ul>
 </body>
 </html>
