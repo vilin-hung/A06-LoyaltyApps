@@ -87,6 +87,10 @@
             <button type="submit">Lihat Daftar Produk</button>
             </form>
             <br>
+
+            <form action="{{ route('home') }}">
+            <button type="submit">Kembali ke Beranda</button>
+            </form>        
         @endif
 
         @if(auth()->user()->role === 'admin')
@@ -94,11 +98,11 @@
             <button type="submit">Lihat Transaksi Lainnya</button>
             </form>
             <br>
-        @endif
 
-        <form action="{{ route('home') }}">
-          <button type="submit">Kembali ke Beranda</button>
-        </form>
+            <form action="{{ route('admin.dashboard') }}">
+            <button type="submit">Kembali ke Beranda Admin</button>
+            </form>   
+        @endif
     </p>
 
 </div>

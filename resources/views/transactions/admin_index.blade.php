@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-  <title>Dashboard Admin - Riwayat Semua Transaksi</title>
+  <title>Beranda Admin - Riwayat Transaksi</title>
 </head>
 <body>
   <h2>Transaksi Pelanggan</h2>
@@ -53,7 +53,7 @@
   @endif
 
   <br><br>
-  <a href="{{ route('admin.dashboard') }}"><button>Kembali ke Beranda</button></a>
+  <a href="{{ route('admin.dashboard') }}"><button>Kembali ke Beranda Admin</button></a>
 
 </body>
 </html>
