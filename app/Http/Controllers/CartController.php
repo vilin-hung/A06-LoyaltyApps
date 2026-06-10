@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cart;
+use App\Models\Membership;
 use App\Models\Product;
 use App\Models\Redeem;
 use App\Models\Transaction;
 use App\Models\TransactionItem;
 use App\Services\TransactionService;
+use App\Models\Voucher;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -23,9 +25,11 @@ class CartController extends Controller
             ->get();
     
         $myVouchers = Redeem::where('user_id', auth()->id())
+            ->where('status', 'unused')
             ->with('voucher')
             ->get()
-            ->pluck('voucher');
+            ->pluck('voucher')
+            ->unique('id');
 
         $checkedIds = $request->query('cart_ids') ?? $request->input('cart_ids') ?? [];
         $selectedVoucherId = $request->input('voucher_id');
@@ -41,7 +45,7 @@ class CartController extends Controller
             }
 
             $user = auth()->user();
-            $membership = \App\Models\Membership::where('min_transaction', '<=', $user->total_spent)
+            $membership = Membership::where('min_transaction', '<=', $user->total_spent)
                 ->orderBy('min_transaction', 'desc')
                 ->first();
                 
@@ -51,9 +55,13 @@ class CartController extends Controller
 
             // Hitung potongan voucher
             if ($selectedVoucherId) {
-                $v = \App\Models\Voucher::find($selectedVoucherId);
+                $v = Voucher::find($selectedVoucherId);
                 if ($v) {
-                    $voucherDiscount = $v->discount_amount;
+                    if ($v->discount_type === 'percentage') {
+                        $voucherDiscount = $subtotalChosen * ($v->discount_value / 100);
+                    } else {
+                        $voucherDiscount = $v->discount_value;
+                    }
                 }
             }
         }

@@ -15,25 +15,39 @@
         <p>Kamu belum pernah melakukan transaksi apapun.</p>
     @endif
 
-    <table border="1" cellpadding="10" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+    <table border="1" cellpadding="10" cellspacing="0" border-collapse: collapse;>
         <thead>
             <tr style="background-color: #f3f4f6;">
                 <th>ID Transaksi</th>
                 <th>Tanggal & Waktu</th>
                 <th>Total Pembayaran</th>
                 <th>Poin yang Didapat</th>
-                <th>Aksi</th>
+                <th>Voucher yang Digunakan</th>
+                <th>Nota</th>
             </tr>
         </thead>
         <tbody>
             @foreach($transactions as $trx)
-                <tr>
+                <tr style="text-align:center">
                     <td>#{{ $trx->id }}</td>
                     <td>{{ $trx->created_at->format('d M Y, H:i') }}</td>
                     <td>Rp {{ number_format($trx->total_amount, 0, ',', '.') }}</td>
                     <td style="color: green; font-weight: bold;">+{{ $trx->points_earned }} Poin</td>
                     <td>
-                        <a href="{{ route('transactions.show', $trx->id) }}">Detail</a>
+                        @if($trx->voucher)
+                        <span style="background-color: #e8f8f5; color: #117a65; padding: 2px 6px; border-radius: 4px;">
+                        {{ $trx->voucher->code }}
+                        </span>
+                        @else
+                            <span style="color: gray;">-</span>
+                        @endif
+                    </td>
+                    <td>
+                        <button style="background: #7b9e87; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                            type="button"
+                            onclick="window.location='{{ route('transactions.show', $trx->id) }}'">
+                            Detail Transaksi
+                        </button>
                     </td>
                 </tr>
             @endforeach
@@ -42,17 +56,27 @@
     
     <p>
         <form action="{{ route('carts.index') }}">
-          <button type="submit">Intip Keranjangku</button>
+            <button style="background: #7b9e87; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                type="submit">
+                Intip Keranjangku
+            </button>
         </form>
+        
         <br>
 
         <form action="{{ route('products.index') }}">
-          <button type="submit">Lihat Daftar Produk</button>
+            <button style="background: #7b9e87; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                type="submit">
+                Lihat Daftar Produk
+            </button>
         </form>
         <br>
 
         <form action="{{ route('home') }}">
-          <button type="submit">Kembali ke Beranda</button>
+            <button style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                button type="submit">
+                Kembali ke Beranda
+            </button>
         </form>
     </p>
 

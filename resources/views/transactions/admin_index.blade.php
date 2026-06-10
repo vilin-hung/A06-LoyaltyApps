@@ -43,7 +43,10 @@
             </td>
             <td>
               <a href="{{ route('transactions.show', $transaction->id) }}">
-                <button type="button">Detail Nota</button>
+                <button style="background-color: #e8f8f5; color: #117a65; border-color: #e8f8f5;padding: 2px 6px; border-radius: 4px;"
+                  type="button">
+                  Detail Nota
+                </button>
               </a>
             </td>
           </tr>
@@ -53,7 +56,12 @@
   @endif
 
   <br><br>
-  <a href="{{ route('admin.dashboard') }}"><button>Kembali ke Beranda Admin</button></a>
+  <form action="{{ route('admin.dashboard') }}">
+    <button style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+      type="submit">
+      Kembali ke Beranda Admin
+    </button>
+  </form>
 
 </body>
 </html>

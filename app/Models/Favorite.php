@@ -4,13 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Redeem extends Model
+class Favorite extends Model
 {
     protected $fillable = [
         'user_id',
-        'voucher_id',
-        'points_spent',
-        'status',
+        'product_id',
     ];
 
     public function user()
@@ -18,9 +16,8 @@ class Redeem extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function voucher()
+    public function product()
     {
-        return $this->belongsTo(Voucher::class);
+        return $this->belongsTo(Product::class);
     }
 }
-

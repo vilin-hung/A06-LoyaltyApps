@@ -13,6 +13,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('voucher_id')->constrained()->onDelete('cascade');
             $table->integer('points_spent');
+            $table->string('status')->default('unused');
             $table->timestamps();
         });
     }
