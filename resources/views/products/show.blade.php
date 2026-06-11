@@ -22,7 +22,7 @@
 @endif
 
 @if(session('success_html'))
-    <p style="color: green;">{{!! session('success_html') !!}}</p>
+    <p style="color: green;">{!! session('success_html') !!}</p>
 @endif
 
 @if(session('success'))

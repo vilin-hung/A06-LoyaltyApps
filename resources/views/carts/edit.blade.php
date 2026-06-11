@@ -24,8 +24,15 @@
         </p>
 
         <p>
-            <button type="submit">Simpan Perubahan</button>
-            <a href="{{ route('carts.index') }}">Batal</a>
+            <button style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                type="submit">
+                Simpan Perubahan
+            </button>
+            <button style="background: #981e11; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                type="submit"
+                onclick="window.location='{{ route('carts.index') }}'">
+                Batal
+            </button>
         </p>
     </form>
 

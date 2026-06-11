@@ -47,7 +47,7 @@ class MembershipController extends Controller
         }
 
         $validated = $request->validate([
-            'level' => 'required|string|max:255|unique:memberships,level,' . $membership->id,
+            'level' => 'required|string|max:255|unique:memberships,level,',
             'min_transaction' => 'required|integer|min:0',
             'point_multiplier' => 'required|integer|min:1',
             'discount_percentage' => 'required|integer|min:0|max:100',

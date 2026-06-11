@@ -64,5 +64,44 @@ class VoucherSeeder extends Seeder
             'end_date' => now()->addDays(21),
             'is_active' => false,
         ]);
+
+        Voucher::create([
+            'name' => 'Demi Konten',
+            'code' => 'Konten2026',
+            'description' => 'Voucher belanja buat barang-barang yang dibeli cuma demi estetika medsos',
+            'discount_type' => 'percentage',
+            'discount_value' => 5,
+            'points_required' => 15,
+            'quota' => 50,
+            'start_date' => now(),
+            'end_date' => now()->addDays(45),
+            'is_active' => true,
+        ]);
+
+        Voucher::create([
+            'name' => 'Tumbal Kuota',
+            'code' => 'KAGETBGT',
+            'description' => 'Voucher yang kuotanya terbatas banget dan cepat habis',
+            'discount_type' => 'fixed',
+            'discount_value' => 12000,
+            'points_required' => 15,
+            'quota' => 10,
+            'start_date' => now(),
+            'end_date' => now()->addDays(7),
+            'is_active' => true,
+        ]);
+
+        Voucher::create([
+            'name' => 'Voucher Rahasia',
+            'code' => 'RAHASIA2026',
+            'description' => 'Voucher yang hanya bisa didapatkan oleh pengguna tertentu saja',
+            'discount_type' => 'fixed',
+            'discount_value' => 5000,
+            'points_required' => 12,
+            'quota' => 20,
+            'start_date' => now(),
+            'end_date' => now()->addDays(30),
+            'is_active' => true,
+        ]);
     }
 }

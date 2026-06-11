@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Membership;
 use App\Models\Redeem;
 use App\Models\Transaction;
 use App\Models\Voucher;
@@ -32,7 +33,7 @@ class TransactionController extends Controller
         }
 
         $transactions = Transaction::with(['user', 'voucher'])
-            ->orderBy('created_at', 'desc')
+            ->orderBy('id', 'desc')
             ->get();
 
         return view('transactions.admin_index', compact('transactions'));
@@ -52,16 +53,18 @@ class TransactionController extends Controller
         }
 
         $product = Product::findOrFail($productId);
-        $vouchers = Redeem::where('user_id', auth()->id())
+        $myVouchers = Redeem::where('user_id', auth()->id())
+            ->where('status', 'unused')
             ->with('voucher')
             ->get()
-            ->pluck('voucher');
+            ->pluck('voucher')
+            ->unique('id');
             
         $subtotalChosen = $product->price * $quantity;
 
         $user = auth()->user();
         $membershipDiscount = 0;
-        $membership = \App\Models\Membership::where('min_transaction', '<=', $user->total_spent)
+        $membership = Membership::where('min_transaction', '<=', $user->total_spent)
             ->orderBy('min_transaction', 'desc')
             ->first();
             
@@ -70,14 +73,31 @@ class TransactionController extends Controller
         }
 
         $totalFinal = $subtotalChosen - $membershipDiscount;
+
+        $voucherDiscount = 0;
+        $selectedVoucherId = $request->query('voucher_id');
+        if ($selectedVoucherId) {
+            $v = Voucher::find($selectedVoucherId);
+            if ($v) {
+                if ($v->discount_type === 'percentage') {
+                    $voucherDiscount = $subtotalChosen * ($v->discount_value / 100);
+                } else {
+                    $voucherDiscount = $v->discount_value;
+                }
+                $totalFinal = $totalFinal - $voucherDiscount;
+            }
+}
+
         if ($totalFinal < 0) $totalFinal = 0;
 
         return view('transactions.create', compact(
             'product',
             'quantity',
-            'vouchers',
+            'myVouchers',
             'subtotalChosen',
             'membershipDiscount',
+            'voucherDiscount',
+            'selectedVoucherId',
             'totalFinal'
             ));
     }
