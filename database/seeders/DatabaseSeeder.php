@@ -3,12 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
-use App\Models\Product;
-use App\Models\User;
-use App\Models\Voucher;
-use App\Models\News;
-use App\Models\Membership;
 
 class DatabaseSeeder extends Seeder
 {
@@ -53,12 +47,14 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            CartSeeder::class,
+            UserSeeder::class,
             MembershipSeeder::class,
-            TransactionSeeder::class,
-            VoucherSeeder::class,
             ProductSeeder::class,
             ReviewSeeder::class,
+            VoucherSeeder::class,
+            TransactionSeeder::class,
+            CartSeeder::class,
+            NewsSeeder::class,
         ]);
     }
 }

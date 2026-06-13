@@ -3,16 +3,10 @@
 <head>
     <title>Tambah Berita</title>
     <style>
-        .btn {
-            padding: 5px 10px;
-            text-decoration: none;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background-color: #f2f2f2;
-            color: black;
-            font-size: 14px;
-            cursor: pointer;
-        }
+        body { margin: 20px; color: #333; }
+        .btn { padding: 8px 16px; border: none; border-radius: 6px; cursor: pointer; text-decoration: none; display: inline-block; font-size: 14px; }
+        .btn_blue { background: #4545a5; color: #fff6fd; }
+        .btn_green { background: #7b9e87; color: #fff6fd; }
     </style>
 </head>
 <body>
@@ -22,7 +16,7 @@
         <p style="color: green;"><b>{{ session('success') }}</b></p>
     @endif <br>
 
-    <!-- Form untuk menambahkan berita -->
+    <!-- Form tambah berita -->
     <form method="POST" action="{{ route('news.store') }}">
         @csrf
         <p>
@@ -33,10 +27,9 @@
             <label>Konten:</label><br>
             <textarea name="content" rows="5" required></textarea>
         </p>
-        <button type="submit" class="btn">Simpan</button>
-    </form>
+        <button type="submit" class="btn btn_green">Simpan</button>
+    </form><br>
 
-    <br>
-    <a href="{{ route('news.index') }}">Kembali ke Daftar Berita</a>
+    <a href="{{ route('news.index') }}" class="btn btn_blue">Kembali ke Daftar Berita</a>
 </body>
 </html>

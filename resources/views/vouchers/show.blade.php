@@ -8,7 +8,7 @@
 <!-- Menampilkan detail informasi voucher -->
 <h1>{{ $voucher->name }}</h1>
 <p>
-    <a href="{{ route('vouchers.index') }}" class="btn">
+    <a href="{{ route('vouchers.index') }}" style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; font-size: 14px; border-radius:6px; cursor:pointer; text-decoration: none; font-family: sans-serif;">
         Kembali
     </a>
 </p>

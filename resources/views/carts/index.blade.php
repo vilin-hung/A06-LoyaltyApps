@@ -131,8 +131,8 @@
       @if(isset($checkedIds))
         @foreach($checkedIds as $id)
           <input type="hidden"
-                name="cart_ids[]"
-                value="{{ $item->id }}">
+            name="cart_ids[]"
+            value="{{ $id }}">
         @endforeach
       @endif
 

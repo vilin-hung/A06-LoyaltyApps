@@ -71,13 +71,16 @@
     <label>Status:</label><br>
     <input type="checkbox" name="status" value="1" checked> Voucher Aktif<br><br>
 
-    <button type="submit">
+    <button style="background: #7b9e87; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+    type="submit">
         Simpan
     </button>
 </form>
 
 <br>
-<a href="{{ route('vouchers.index') }}">Kembali ke Daftar Voucher</a>
+<a href="{{ route('vouchers.index') }}" style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; font-size: 14px; border-radius:6px; cursor:pointer; text-decoration: none; font-family: sans-serif;">
+    Kembali ke Daftar Voucher
+</a>
 
 </body>
 </html>
