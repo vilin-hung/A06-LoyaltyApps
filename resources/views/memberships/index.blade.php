@@ -2,6 +2,11 @@
 <html>
 <head>
     <title>Memberships</title>
+    <style>
+        .color_silver { color: #8e8e8e; font-weight: bold; }
+        .color_gold { color: #d4af37; font-weight: bold; }
+        .color_platinum { color: #504d49; font-weight: bold; }
+    </style>
 </head>
 <body style="margin: 20px; color: #333;">
 
@@ -43,7 +48,7 @@
             @foreach($memberships as $membership)
                 <tr style="text-align:center">
                     <td style="font-weight: bold; text-align: left;">
-                        <span style="background-color: #e8f8f5; color: #117a65; padding: 4px 8px; border-radius: 4px;">
+                        <span class="color_{{ strtolower($membership->level) }}" style="background-color: #e8f8f5; padding: 4px 8px; border-radius: 4px;">
                             {{ $membership->level }}
                         </span>
                     </td>

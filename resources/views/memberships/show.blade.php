@@ -2,13 +2,18 @@
 <html>
 <head>
     <title>Detail Membership</title>
+    <style>
+        .color_silver { color: #8e8e8e; font-weight: bold; }
+        .color_gold { color: #d4af37; font-weight: bold; }
+        .color_platinum { color: #504d49; font-weight: bold; }
+    </style>
 </head>
 <body>
 
 <!-- Menampilkan detail informasi membership -->
-<h1>Tier: {{ $membership->level }}</h1>
+<h1>Tier: <span class="color_{{ strtolower($membership->level) }}">{{ $membership->level }}</span></h1>
 <p>
-    <a href="{{ route('memberships.index') }}" class="btn">
+    <a href="{{ route('memberships.index') }}" style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; font-size: 14px; border-radius:6px; cursor:pointer; text-decoration: none; font-family: sans-serif;">
         Kembali
     </a>
 </p>

@@ -2,11 +2,16 @@
 <html>
 <head>
     <title>Edit Membership</title>
+    <style>
+        .color_silver { color: #8e8e8e; font-weight: bold; }
+        .color_gold { color: #d4af37; font-weight: bold; }
+        .color_platinum { color: #504d49; font-weight: bold; }
+    </style>
 </head>
 <body>
 
 <!-- Halaman form untuk mengedit data membership -->
-<h1>Edit Tier Membership: {{ $membership->level }}</h1>
+<h1>Edit Tier Membership: <span class="color_{{ strtolower($membership->level) }}">{{ $membership->level }}</span></h1>
 
 <form action="{{ route('memberships.update', $membership->id) }}" method="POST">
     @csrf
@@ -53,13 +58,15 @@
     @enderror
     <br>
 
-    <button type="submit">
+    <button style="background: #7b9e87; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;" type="submit">
         Update Tier
     </button>
 </form>
 
 <br>
-<a href="{{ route('memberships.index') }}">Kembali ke Daftar Membership</a>
+<a href="{{ route('memberships.index') }}" style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; font-size: 14px; border-radius:6px; cursor:pointer; text-decoration: none; font-family: sans-serif;">
+    Kembali ke Daftar Membership
+</a>
 
 </body>
 </html>
