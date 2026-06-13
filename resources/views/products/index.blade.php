@@ -2,18 +2,6 @@
 <html>
 <head>
     <title>Daftar Produk</title>
-    <style>
-        .btn {
-            padding: 5px 10px;
-            text-decoration: none;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background-color: #f2f2f2;
-            color: black;
-            font-size: 14px;
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
 
@@ -27,30 +15,44 @@
 <h1>Daftar Produk</h1>
 
 @if(Auth::check() && Auth::user()->role == 'admin')
-    <p>
-        <a href="{{ route('admin.dashboard') }}" class="btn">
+    <div style="display:flex; gap:10px; margin-bottom:15px;">
+        <button
+            style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+            type="button"
+            onclick="window.location='{{ route('admin.dashboard') }}'">
             Kembali ke Beranda Admin
-        </a>
-        &nbsp;&nbsp;
-        <a href="{{ route('reviews.index') }}" class="btn">
+        </button>
+
+        <button
+            style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+            type="button"
+            onclick="window.location='{{ route('reviews.index') }}'">
             Lihat Ulasan
-        </a>
-        <!-- Button 'tambah produk' hanya untuk admin -->
-        &nbsp;&nbsp;
-        <a href="{{ route('products.create') }}" class="btn">
+        </button>
+
+        <button
+            style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+            type="button"
+            onclick="window.location='{{ route('products.create') }}'">
             Tambah Produk
-        </a>
-    </p>
+        </button>
+    </div>
 @else
-    <p>
-        <a href="{{ route('home') }}" class="btn">
+    <div style="display:flex; gap:10px; margin-bottom:15px;">
+        <button
+            style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+            type="button"
+            onclick="window.location='{{ route('home') }}'">
             Kembali ke Beranda
-        </a>
-        &nbsp;&nbsp;
-        <a href="{{ route('reviews.index') }}" class="btn">
+        </button>
+
+        <button
+            style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+            type="button"
+            onclick="window.location='{{ route('reviews.index') }}'">
             Lihat Ulasan
-        </a>
-    </p>
+        </button>
+    </div>
 @endif
 <br>
 
@@ -78,9 +80,12 @@
             </td>
 
             <td>
-                <a href="{{ route('products.show', $product->id) }}" class="btn">
+                <button
+                    style="background: #7b9e87; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                    type="button"
+                    onclick="window.location='{{ route('products.show', $product->id) }}'">
                     Detail
-                </a>
+                </button>
 
                 @if(Auth::check() && Auth::user()->role != 'admin')
                     <form action="{{ route('favorites.store', $product->id) }}"
@@ -88,16 +93,21 @@
                         style="display:inline;">
                         @csrf
 
-                        <button type="submit" class="btn">
+                        <button
+                            style="background: #ff4995; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                            type="submit">
                             Favorit
                         </button>
                     </form>
                 @endif
 
                 @if(Auth::check() && Auth::user()->role == 'admin')
-                    <a href="{{ route('products.edit', $product->id) }}" class="btn">
+                    <button
+                        style="background: #2d6601; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                        type="button"
+                        onclick="window.location='{{ route('products.edit', $product->id) }}'">
                         Ubah
-                    </a>
+                    </button>
 
                     <form action="{{ route('products.destroy', $product->id) }}"
                         method="POST"
@@ -105,9 +115,10 @@
                         @csrf
                         @method('DELETE')
 
-                        <button type="submit"
-                                class="btn"
-                                onclick="return confirm('Hapus product ini?')">
+                        <button
+                            style="background: #981e11; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                            type="submit"
+                            onclick="return confirm('Hapus product ini?')">
                             Hapus
                         </button>
                     </form>

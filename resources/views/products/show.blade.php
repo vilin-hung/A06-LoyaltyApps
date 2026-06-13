@@ -2,18 +2,6 @@
 <html>
 <head>
     <title>Detail Produk</title>
-    <style>
-        .btn {
-            padding: 5px 10px;
-            text-decoration: none;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background-color: #f2f2f2;
-            color: black;
-            font-size: 14px;
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
 
@@ -32,9 +20,12 @@
 <!-- Menampilkan detail informasi product -->
 <h1>{{ $product->name }}</h1>
 <p>
-    <a href="{{ route('products.index') }}" class="btn">
+    <button
+        style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+        type="button"
+        onclick="window.location='{{ route('products.index') }}'">
         Kembali ke Daftar Produk
-    </a>
+    </button>
 </p>
 <p>Harga: Rp {{ number_format($product->price, 2, ',', '.') }}</p>
 <p>Deskripsi: {{ $product->description }}</p>
@@ -55,8 +46,9 @@
 
     <!-- Akses edit hanya untuk pemillik review -->
     @if(Auth::id() == $review->user_id)
-        <a href="{{ route('reviews.edit', ['review' => $review->id, 'from' => 'product']) }}">
-            [Ubah]
+        <a href="{{ route('reviews.edit', ['review' => $review->id, 'from' => 'product', 'product_id' => $review->product_id]) }}"
+            style="background: #2d6601; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; text-decoration:none; display:inline-block;">
+            Ubah
         </a>
     @endif
     <hr>
@@ -66,9 +58,12 @@
 @endforelse
 
 @if(!Auth::check() || Auth::user()->role !== 'admin')
-    <a href="{{ route('reviews.create', ['product_id' => $product->id]) }}">
+    <button
+        style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+        type="button"
+        onclick="window.location='{{ route('reviews.create', ['product_id' => $product->id]) }}'">
         Tambah Ulasan
-    </a>
+    </button>
     <hr>
     <div style="display: flex; gap: 10px; margin-top: 10px;">
         <!-- Button add to cart product -->
@@ -76,11 +71,18 @@
             @csrf
             <input type="hidden" name="product_id" value="{{ $product->id }}">
             <input type="hidden" name="quantity" value="1">
-            <button type="submit" class="btn">Tambah ke Keranjang</button>
-        </form> 
+            <button
+                style="background: #7b9e87; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                type="submit">
+                Tambah ke Keranjang
+            </button>
+        </form>    
         <!-- Button order now product -->
-        <a href="{{ route('transactions.create', ['product_id' => $product->id, 'quantity' => 1]) }}" class="btn">
+        <button
+            style="background: #7b9e87; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+            type="button"
+            onclick="window.location='{{ route('transactions.create', ['product_id' => $product->id, 'quantity' => 1]) }}'">
             Buat Pesanan Sekarang
-        </a> 
+        </button>
     </div>
 @endif

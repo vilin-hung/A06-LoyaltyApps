@@ -32,14 +32,22 @@
     <label>Kategori:</label><br>
     <select name="category" required>
         <option value="">-- Pilih Kategori --</option>
-        <option value="Coffee" {{ old('category') == 'Coffee' ? 'selected' : '' }}>Coffee</option>
-        <option value="Tea Blend" {{ old('category') == 'Tea Blend' ? 'selected' : '' }}>Tea Blend</option>
-        <option value="Milk Tea" {{ old('category') == 'Milk Tea' ? 'selected' : '' }}>Milk Tea</option>
-        <option value="Chocolate" {{ old('category') == 'Chocolate' ? 'selected' : '' }}>Chocolate</option>
+        <option value="Coffee" {{ old('category', $product->category) == 'Coffee' ? 'selected' : '' }}>Coffee</option>
+        <option value="Tea Blend" {{ old('category', $product->category) == 'Tea Blend' ? 'selected' : '' }}>Tea Blend</option>
+        <option value="Milk Tea" {{ old('category', $product->category) == 'Milk Tea' ? 'selected' : '' }}>Milk Tea</option>
+        <option value="Chocolate" {{ old('category', $product->category) == 'Chocolate' ? 'selected' : '' }}>Chocolate</option>
     </select>
-
-    <button type="submit">
-        Perbarui 
+    <br><br>
+    <button
+        style="background: #2d6601; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+        type="submit">
+        Perbarui
+    </button>
+    <button
+        style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+        type="button"
+        onclick="window.location='{{ route('products.index') }}'">
+        Tidak Jadi Ubah Produk
     </button>
 </form>
 

@@ -42,8 +42,16 @@
 
     <br><br>
 
-    <button type="submit">
+    <button
+        style="background: #2d6601; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+        type="submit">
         Simpan
+    </button>
+    <button
+        style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+        type="button"
+        onclick="window.location='{{ route('products.index') }}'">
+        Tidak Jadi Tambah Produk
     </button>
 </form>
 
