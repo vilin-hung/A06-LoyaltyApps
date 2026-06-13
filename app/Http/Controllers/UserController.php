@@ -36,7 +36,14 @@ class UserController extends Controller
                 'min:8',
                 'confirmed',
             ],
+        ], [
+            'old_password.required' => 'Password lama wajib diisi.',
+            'new_password.required' => 'Password baru wajib diisi.',
+            'new_password.min' => 'Password minimal harus 8 karakter.',
+            'new_password.confirmed' => 'Konfirmasi password tidak sama dengan password baru.',
+            'new_password_confirmation.required' => 'Konfirmasi password wajib diisi.',
         ]);
+
 
         // Cek password lama sebelum update
         if (!Hash::check($request->old_password, $user->password)) {
