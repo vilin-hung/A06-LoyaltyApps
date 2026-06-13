@@ -3,46 +3,52 @@
 <head>
     <title>Info Membership</title>
     <style>
-        .btn {
-            padding: 5px 10px;
-            text-decoration: none;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background-color: #f2f2f2;
-            color: black;
-            font-size: 14px;
-            cursor: pointer;
-        }
+        body { margin: 20px; color: #333;}
+        
+        /* Navigasi */
+        .nav { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #ccc; }
+        .nav_link { text-decoration: none; color: #4545a5; margin-right: 15px; font-weight: bold; }
+        
+        /* Box */
+        .card { padding: 15px; border: 1px solid #ccc; border-radius: 4px; margin-bottom: 20px; }
+        
+        /* Warna Membership */
+        .color_silver { color: #8e8e8e; font-weight: bold; }
+        .color_gold { color: #d4af37; font-weight: bold; }
+        .color_platinum { color: #504d49; font-weight: bold; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 12px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #f3f4f6; }
     </style>
 </head>
 <body>
-    <nav>
-        <a href="{{ route('home') }}">Beranda</a> |
-        <a href="{{ route('profile') }}">Profil</a> |
-        <a href="{{ route('points') }}">Poin</a> |
-        <a href="{{ route('saldo') }}">Saldo</a> |
-        <a href="{{ route('membership.info') }}">Membership</a> |
-        <a href="{{ route('logout') }}">Keluar</a>
+
+    <nav class="nav">
+        <a href="{{ route('home') }}" class="nav_link">Beranda</a>
+        <a href="{{ route('profile') }}" class="nav_link">Profil</a>
+        <a href="{{ route('points') }}" class="nav_link">Poin</a>
+        <a href="{{ route('saldo') }}" class="nav_link">Saldo</a>
+        <a href="{{ route('membership.info') }}" class="nav_link">Membership</a>
+        <a href="{{ route('logout') }}" class="nav_link" style="color: #cb4335;">Keluar</a>
     </nav>
 
-<h1>Info Membership</h1>
+    <h1>Info Membership</h1>
 
-<h2 style="margin-bottom: 10px;">
-        Membership Saat Ini: 
-        <span style="background-color: #e8f8f5; color: #117a65; padding: 4px 12px; border-radius: 6px; font-weight: bold; font-size: 24px;">
-            {{ auth()->user()->membership->level ?? 'Silver' }}
-        </span>
-    </h2>
-    <p style="font-size: 16px;">
-        Total Belanja Kamu: <strong style="color: #4545a5; font-size: 18px;">Rp {{ number_format(auth()->user()->total_spent, 0, ',', '.') }}</strong>
-    </p>
+    <div class="card">
+        <h2>
+            Membership Saat Ini: 
+            <span class="color_{{ strtolower(auth()->user()->membership->level ?? 'silver') }}">
+                {{ auth()->user()->membership->level ?? 'Silver' }}
+            </span>
+        </h2>
+        <p>Total Belanja Kamu: <strong>Rp {{ number_format(auth()->user()->total_spent, 0, ',', '.') }}</strong></p>
+    </div>
 
-    <br>
-
-    <h3 style="margin-bottom: 15px;">Keuntungan Tiap Tier Membership</h3>
-    <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse;">
+    <h3>Keuntungan Tiap Tier Membership</h3>
+    <table>
         <thead>
-            <tr style="background-color: #f3f4f6;">
+            <tr>
                 <th>Tier</th>
                 <th>Min. Transaksi</th>
                 <th>Diskon</th>
@@ -51,16 +57,16 @@
         </thead>
         <tbody>
             @forelse($memberships as $tier)
-                <tr style="text-align:center">
-                    <td style="font-weight: bold; text-align: left;">
-                        <span style="background-color: #e8f8f5; color: #117a65; padding: 2px 6px; border-radius: 4px;">
+                <tr style="text-align: center;">
+                    <td style="font-weight: bold;">
+                        <span class="color_{{ strtolower($tier->level) }}">
                             {{ $tier->level }}
                         </span>
                     </td>
                     <td>Rp {{ number_format($tier->min_transaction, 0, ',', '.') }}</td>
                     <td>
                         @if($tier->discount_percentage > 0)
-                            <span style="font-weight: bold;">{{ $tier->discount_percentage }}% OFF</span>
+                            <span style="font-weight: bold; color: red;">{{ $tier->discount_percentage }}% OFF</span>
                         @else
                             <span style="color: gray;">-</span>
                         @endif
