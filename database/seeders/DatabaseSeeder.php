@@ -42,7 +42,8 @@ class DatabaseSeeder extends Seeder
             'saldo' => 500000,
             'points' => 100,
         ]);
-        // User::factory()->count(10)->create();
+        
+        User::factory()->count(10)->create();
 
         // News
         News::create([
