@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <head>
-  <title>Beranda Admin - Riwayat Transaksi</title>
+  <title>Riwayat Transaksi</title>
 </head>
 <body>
   <h2>Transaksi Pelanggan</h2>
