@@ -34,11 +34,13 @@
     <h3>Opsi Pembayaran & Voucher</h3>
     <label>Pilih Voucher:</label>
     <select name="voucher_id">
-        <option value="" style="background-color: #e8f8f5; color: #117a65; padding: 2px 6px; border-radius: 4px;">
+        <option value="" style="background-color: #e8f8f5; color: #117a65; padding: 2px 6px; border-radius: 4px;"
+            {{ empty($selectedVoucherId) ? 'selected' : '' }}>
             -- Tanpa Voucher --
         </option>
         @foreach($myVouchers as $voucher)
-            <option value="{{ $voucher->id }}">
+            <option value="{{ $voucher->id }}"
+                {{ $selectedVoucherId == $voucher->id ? 'selected' : '' }}>
                 {{ $voucher->code }}
                 (Potongan: 
                 @if($voucher->discount_type === 'percentage')

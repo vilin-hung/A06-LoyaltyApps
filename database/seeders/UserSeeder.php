@@ -28,6 +28,8 @@ class UserSeeder extends Seeder
             'role' => 'user',
             'saldo' => 1000000,
             'points' => 100,
+            'total_spent' => 366100,
+            'membership_id' => 2,
         ]);
 
         User::create([
@@ -46,6 +48,7 @@ class UserSeeder extends Seeder
             'role' => 'user',
             'saldo' => 50000,
             'points' => 10,
+            'total_spent' => 119600,
         ]);
 
         User::create([
@@ -64,6 +67,7 @@ class UserSeeder extends Seeder
             'role' => 'user',
             'saldo' => 100000,
             'points' => 20,
+            'total_spent' => 164500, 
         ]);
 
         User::create([
@@ -82,6 +86,7 @@ class UserSeeder extends Seeder
             'role' => 'user',
             'saldo' => 75000,
             'points' => 15,
+            'total_spent' => 183600,
         ]);
     }
 }

@@ -85,8 +85,8 @@ class CartController extends Controller
      */
     public function create()
     {
-        $products = \App\Models\Product::all();
-        return view('carts.create', compact('products'));
+        return redirect()
+            ->route('products.index');
     }
 
     /**
@@ -213,6 +213,16 @@ class CartController extends Controller
         if ($cartItems->isEmpty()) {
             return redirect()->route('carts.index')->with('error', 'Keranjang kosong.');
         }
+
+        // validasi jumlah produk dalam keranjang
+        foreach ($cartItems as $item) {
+            if ($item->product->stock < $item->quantity) {
+                return redirect()
+                    ->route('carts.index')
+                    ->with('error', 'Stok tidak mencukupi');
+            }
+        }
+
 
         $items = $cartItems->map(function ($cart) {
             return ['product_id' => $cart->product_id, 'quantity' => $cart->quantity];

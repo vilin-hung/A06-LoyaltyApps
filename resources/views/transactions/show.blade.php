@@ -38,7 +38,7 @@
             @foreach($transaction->transactionItems as $item)
                 <tr>
                     <td>{{ $item->product->name }}</td>
-                    <td>{{ $item->quantity }}</td>
+                    <td style="text-align:center">{{ $item->quantity }}</td>
                     <td>Rp {{ number_format($item->product->price, 0, ',', '.') }}</td>
                 </tr>
             @endforeach
