@@ -23,6 +23,19 @@ class VoucherSeeder extends Seeder
             'quota' => 50,
             'start_date' => now(),
             'end_date' => now()->addDays(30),
+            'is_active' => false,
+        ]);
+
+        Voucher::create([
+            'name' => 'Haus Kasih Sayang (& Kopi)',
+            'code' => 'FORYOU<3',
+            'description' => 'untuk kamu yang lagi haus kasih sayang dan kopi',
+            'discount_type' => 'fixed',
+            'discount_value' => 7000,
+            'points_required' => 15,
+            'quota' => 45,
+            'start_date' => now(),
+            'end_date' => now()->addDays(30),
             'is_active' => true,
         ]);
 
@@ -53,6 +66,19 @@ class VoucherSeeder extends Seeder
         ]);
 
         Voucher::create([
+            'name' => 'Dana Darurat Kopi',
+            'code' => 'Kopi123',
+            'description' => 'Potongan harga untuk kamu yang butuh kopi, tapi danamu lagi menipis',
+            'discount_type' => 'fixed',
+            'discount_value' => 15000,
+            'points_required' => 25,
+            'quota' => 30,
+            'start_date' => now(),
+            'end_date' => now()->addDays(21),
+            'is_active' => true,
+        ]);
+
+        Voucher::create([
             'name' => 'Ku Cinta Kopi',
             'code' => 'Ilike123',
             'description' => 'Potongan harga untuk kamu para pecinta kopi',
@@ -75,7 +101,7 @@ class VoucherSeeder extends Seeder
             'quota' => 50,
             'start_date' => now(),
             'end_date' => now()->addDays(45),
-            'is_active' => true,
+            'is_active' => false,
         ]);
 
         Voucher::create([
@@ -88,6 +114,19 @@ class VoucherSeeder extends Seeder
             'quota' => 10,
             'start_date' => now(),
             'end_date' => now()->addDays(7),
+            'is_active' => false,
+        ]);
+
+        Voucher::create([
+            'name' => 'Secangkir Jeda',
+            'code' => 'LelahBanget',
+            'description' => 'Potongan harga untuk kamu yang lagi kelelahan menghadapi hari-hari yang berat',
+            'discount_type' => 'percentage',
+            'discount_value' => 5,
+            'points_required' => 15,
+            'quota' => 40,
+            'start_date' => now(),
+            'end_date' => now()->addDays(21),
             'is_active' => true,
         ]);
 
@@ -102,6 +141,32 @@ class VoucherSeeder extends Seeder
             'start_date' => now(),
             'end_date' => now()->addDays(30),
             'is_active' => true,
+        ]);
+
+        Voucher::create([
+            'name' => 'Voucher Spesial',
+            'code' => 'SPESIAL2026',
+            'description' => 'Voucher dengan potongan harga spesial untuk pengguna setia',
+            'discount_type' => 'percentage',
+            'discount_value' => 10,
+            'points_required' => 20,
+            'quota' => 30,
+            'start_date' => now(),
+            'end_date' => now()->addDays(60),
+            'is_active' => true,
+        ]);
+
+        Voucher::create([
+            'name' => 'A Little Treat for You',
+            'code' => 'URSPECIAL',
+            'description' => 'Untuk kalian yang sedang berulang tahun',
+            'discount_type' => 'percentage',
+            'discount_value' => 50,
+            'points_required' => 20,
+            'quota' => 20,
+            'start_date' => now(),
+            'end_date' => now()->addDays(30),
+            'is_active' => false,
         ]);
     }
 }

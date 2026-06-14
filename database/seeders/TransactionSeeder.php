@@ -22,7 +22,7 @@ class TransactionSeeder extends Seeder
                 'items' => [
                     [
                         'product_id' => 20,
-                        'quantity' => 10,
+                        'quantity' => 9,
                         'price' => 30900,
                     ]
                 ],
