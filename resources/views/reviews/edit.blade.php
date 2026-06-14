@@ -23,10 +23,26 @@
     <textarea name="comment" required>{{ $review->comment }}</textarea>
     <br><br>
 
-    <button type="submit">
+    <button style="background: #2d6601; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+        type="submit">
         Perbarui
     </button>
 
+    @if(request('from') == 'index')
+        <button
+            style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+            type="button"
+            onclick="window.location='{{ route('reviews.index') }}'">
+            Tidak Jadi Ubah Ulasan
+        </button>
+    @elseif(request('from') == 'product')
+        <button
+            style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+            type="button"
+            onclick="window.location='{{ route('products.show', ['product' => $review->product_id]) }}'">
+            Tidak Jadi Ubah Ulasan
+        </button>
+    @endif
 </form>
 </body>
 </html>

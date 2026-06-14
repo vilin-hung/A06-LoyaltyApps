@@ -2,18 +2,6 @@
 <html>
 <head>
     <title>Ulasan</title>
-    <style>
-        .btn {
-            padding: 5px 10px;
-            text-decoration: none;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            background-color: #f2f2f2;
-            color: black;
-            font-size: 14px;
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
 
@@ -21,35 +9,46 @@
 <h1>Daftar Ulasan</h1>
 
 @if(Auth::check() && Auth::user()->role == 'admin')
-    <p>
-        <a href="{{ route('admin.dashboard') }}" class="btn">
-            Kembali ke Beranda Admin
-        </a>  
-        &nbsp;&nbsp;
-        <a href="{{ route('products.index') }}" class="btn">
+    <div style="display:flex; gap:10px; margin-bottom:15px;">
+        <form action="{{ route('admin.dashboard') }}">
+            <button
+                style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                type="submit">
+                Kembali ke Beranda Admin
+            </button>
+        </form>
+        <button
+            style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+            type="button"
+            onclick="window.location='{{ route('products.index') }}'">
             Daftar Produk
-        </a>
-    </p>
+        </button>
+    </div>
 @else
-    <p>
-        <a href="{{ route('home') }}" class="btn">
+    <div style="display:flex; gap:10px; margin-bottom:15px;">
+        <button
+            style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+            type="button"
+            onclick="window.location='{{ route('home') }}'">
             Kembali ke Beranda
-        </a>
-        &nbsp;&nbsp;
-        <a href="{{ route('products.index') }}" class="btn">
+        </button>
+        <button
+            style="background: #4545a5; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+            type="button"
+            onclick="window.location='{{ route('products.index') }}'">
             Daftar Produk
-        </a>
-    </p>
+        </button>
+    </div>
 @endif
 <br>
 
 <table border="1" cellpadding="10">
     <tr>
-        <th>User</th>
-        <th>Product</th>
+        <th>Pengguna</th>
+        <th>Produk</th>
         <th>Rating</th>
-        <th>Comment</th>
-        <th>Action</th>
+        <th>Komentar</th>
+        <th>Aksi</th>
     </tr>
 
     @foreach($reviews as $review)
@@ -61,7 +60,7 @@
         <td>{{ $review->product->name }}</td>
 
         <!-- Menampilkan rating review -->
-        <td>{{ $review->rating }}</td>
+        <td style="text-align:center">{{ $review->rating }}</td>
 
         <!-- Menampilkan isi comment review -->
         <td>{{ $review->comment }}</td>
@@ -69,17 +68,20 @@
         <td>
             {{-- User pemilik review bisa edit --}}
             @if(Auth::check() && Auth::id() == $review->user_id)
-                <a href="{{ route('reviews.edit', ['review' => $review->id, 'from' => 'index']) }}" class="btn">
+                <a href="{{ route('reviews.edit', ['review' => $review->id, 'from' => 'index']) }}"  
+                    style="background: #2d6601; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;">
                     Ubah
                 </a>
             @endif
             <!-- Aksi delete review (admin only) -->
             @if(Auth::check() && Auth::user()->role == 'admin')
-                <form action="{{ route('reviews.destroy', $review->id) }}" method="POST">
+                <form action="{{ route('reviews.destroy', $review->id) }}" method="POST" style="display:inline;">
                     @csrf
                     @method('DELETE')
 
-                    <button type="submit" onclick="return confirm('Hapus review ini?')">
+                    <button style="background: #981e11; color: #fff6fd; border:none; padding:8px 16px; border-radius:6px; cursor:pointer;"
+                        type="submit" 
+                        onclick="return confirm('Hapus review ini?')">
                         Hapus
                     </button>
                 </form>

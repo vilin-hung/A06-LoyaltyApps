@@ -12,6 +12,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             MembershipSeeder::class,
             ProductSeeder::class,
+            ReviewSeeder::class,
             VoucherSeeder::class,
             TransactionSeeder::class,
             CartSeeder::class,
